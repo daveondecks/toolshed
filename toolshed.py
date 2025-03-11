@@ -85,9 +85,9 @@ with col1:
     st.pyplot(draw_tools_box("Plan Tools", plan_selection, "#FFFF66"))  # Yellow
     st.pyplot(draw_tools_box("Act Tools", act_selection, "#FFCC99"))  # Orange
 
-# Center section with PDCA cycle icon (rebalanced layout)
+# Center section with corrected PDCA cycle icon (Clockwise arrows)
 with col2:
-    st.markdown("<div style='text-align: center; margin-top: 150px; font-size: 50px;'>🔄</div>", unsafe_allow_html=True)
+    st.image("https://upload.wikimedia.org/wikipedia/commons/3/3a/PDCA_Cycle.svg", width=100)
     st.markdown("<div style='text-align: center; font-size: 18px; font-weight: bold;'>PDCA Cycle</div>", unsafe_allow_html=True)
 
 with col3:
