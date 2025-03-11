@@ -13,48 +13,39 @@ act_tools = ["Deployment", "Quality", "Time", "Comms", "TQM", "Standard Work", "
 
 st.title("CDH Continuous Improvement Toolshed")
 
-# Function to ensure unique tool selection
-def unique_selectbox(label, options, key, selected_options):
-    available_options = [option for option in options if option not in selected_options]
-    if not available_options:
-        st.warning("All tools in this section have been selected. Please choose different tools.")
-        return None
-    selection = st.selectbox(label, available_options, key=key)
-    selected_options.append(selection)
-    return selection
+# Ensure dropdowns remain in the sidebar
+with st.sidebar:
+    st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
+    plan_selected = []
+    plan_selection = [
+        unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
+        unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
+        unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
+    ]
 
-# Sidebar with color-coded headers
-st.sidebar.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
-plan_selected = []
-plan_selection = [
-    unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
-    unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
-    unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
-]
+    st.markdown("<h3 style='color: #99CCFF;'>🔵 Do</h3>", unsafe_allow_html=True)
+    do_selected = []
+    do_selection = [
+        unique_selectbox("Select a Do tool", do_tools, "do1", do_selected),
+        unique_selectbox("Select another Do tool", do_tools, "do2", do_selected),
+        unique_selectbox("Select one more Do tool", do_tools, "do3", do_selected)
+    ]
 
-st.sidebar.markdown("<h3 style='color: #99CCFF;'>🔵 Do</h3>", unsafe_allow_html=True)
-do_selected = []
-do_selection = [
-    unique_selectbox("Select a Do tool", do_tools, "do1", do_selected),
-    unique_selectbox("Select another Do tool", do_tools, "do2", do_selected),
-    unique_selectbox("Select one more Do tool", do_tools, "do3", do_selected)
-]
+    st.markdown("<h3 style='color: #99FF99;'>🟢 Check</h3>", unsafe_allow_html=True)
+    check_selected = []
+    check_selection = [
+        unique_selectbox("Select a Check tool", check_tools, "check1", check_selected),
+        unique_selectbox("Select another Check tool", check_tools, "check2", check_selected),
+        unique_selectbox("Select one more Check tool", check_tools, "check3", check_selected)
+    ]
 
-st.sidebar.markdown("<h3 style='color: #99FF99;'>🟢 Check</h3>", unsafe_allow_html=True)
-check_selected = []
-check_selection = [
-    unique_selectbox("Select a Check tool", check_tools, "check1", check_selected),
-    unique_selectbox("Select another Check tool", check_tools, "check2", check_selected),
-    unique_selectbox("Select one more Check tool", check_tools, "check3", check_selected)
-]
-
-st.sidebar.markdown("<h3 style='color: #FFCC99;'>🟠 Act</h3>", unsafe_allow_html=True)
-act_selected = []
-act_selection = [
-    unique_selectbox("Select an Act tool", act_tools, "act1", act_selected),
-    unique_selectbox("Select another Act tool", act_tools, "act2", act_selected),
-    unique_selectbox("Select one more Act tool", act_tools, "act3", act_selected)
-]
+    st.markdown("<h3 style='color: #FFCC99;'>🟠 Act</h3>", unsafe_allow_html=True)
+    act_selected = []
+    act_selection = [
+        unique_selectbox("Select an Act tool", act_tools, "act1", act_selected),
+        unique_selectbox("Select another Act tool", act_tools, "act2", act_selected),
+        unique_selectbox("Select one more Act tool", act_tools, "act3", act_selected)
+    ]
 
 # Function to generate toolboxes with a curved top to look like a toolbox
 def draw_tools_box(title, tools, color):
