@@ -13,66 +13,87 @@ act_tools = ["Deployment", "Quality", "Time", "Comms", "TQM", "Standard Work", "
 
 st.title("CDH Continuous Improvement Toolshed")
 
+# Function to ensure unique tool selection
+def unique_selectbox(label, options, key, selected_options):
+    available_options = [option for option in options if option not in selected_options]
+    if not available_options:
+        st.warning("All tools in this section have been selected. Please choose different tools.")
+        return None
+    selection = st.selectbox(label, available_options, key=key)
+    selected_options.append(selection)
+    return selection
+
 # Sidebar with color-coded headers
 st.sidebar.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
+plan_selected = []
 plan_selection = [
-    st.sidebar.selectbox("Select a Plan tool", plan_tools, key="plan1"),
-    st.sidebar.selectbox("Select another Plan tool", plan_tools, key="plan2"),
-    st.sidebar.selectbox("Select one more Plan tool", plan_tools, key="plan3")
+    unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
+    unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
+    unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
 ]
 
 st.sidebar.markdown("<h3 style='color: #99CCFF;'>🔵 Do</h3>", unsafe_allow_html=True)
+do_selected = []
 do_selection = [
-    st.sidebar.selectbox("Select a Do tool", do_tools, key="do1"),
-    st.sidebar.selectbox("Select another Do tool", do_tools, key="do2"),
-    st.sidebar.selectbox("Select one more Do tool", do_tools, key="do3")
+    unique_selectbox("Select a Do tool", do_tools, "do1", do_selected),
+    unique_selectbox("Select another Do tool", do_tools, "do2", do_selected),
+    unique_selectbox("Select one more Do tool", do_tools, "do3", do_selected)
 ]
 
 st.sidebar.markdown("<h3 style='color: #99FF99;'>🟢 Check</h3>", unsafe_allow_html=True)
+check_selected = []
 check_selection = [
-    st.sidebar.selectbox("Select a Check tool", check_tools, key="check1"),
-    st.sidebar.selectbox("Select another Check tool", check_tools, key="check2"),
-    st.sidebar.selectbox("Select one more Check tool", check_tools, key="check3")
+    unique_selectbox("Select a Check tool", check_tools, "check1", check_selected),
+    unique_selectbox("Select another Check tool", check_tools, "check2", check_selected),
+    unique_selectbox("Select one more Check tool", check_tools, "check3", check_selected)
 ]
 
 st.sidebar.markdown("<h3 style='color: #FFCC99;'>🟠 Act</h3>", unsafe_allow_html=True)
+act_selected = []
 act_selection = [
-    st.sidebar.selectbox("Select an Act tool", act_tools, key="act1"),
-    st.sidebar.selectbox("Select another Act tool", act_tools, key="act2"),
-    st.sidebar.selectbox("Select one more Act tool", act_tools, key="act3")
+    unique_selectbox("Select an Act tool", act_tools, "act1", act_selected),
+    unique_selectbox("Select another Act tool", act_tools, "act2", act_selected),
+    unique_selectbox("Select one more Act tool", act_tools, "act3", act_selected)
 ]
 
 # Function to generate toolboxes with a curved top to look like a toolbox
-
 def draw_tools_box(title, tools, color):
     fig, ax = plt.subplots(figsize=(4, 3))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis('off')
     
-    # Draw the curved toolbox handle
-    ax.add_patch(plt.Rectangle((0.1, 0.8), 0.8, 0.15, color='black', ec='black', lw=2))
-    ax.text(0.5, 0.87, "Tools", ha='center', va='center', fontsize=12, color='white', fontweight='bold')
+    # Draw the curved toolbox handle using an arc
+    arc = plt.Arc((0.5, 0.85), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=3)
+    ax.add_patch(arc)
+    ax.text(0.5, 0.9, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
     
     # Draw tool slots
     for i, tool in enumerate(tools):
-        ax.add_patch(plt.Rectangle((0.1, 0.55 - i * 0.15), 0.8, 0.12, color=color, ec='black', lw=2))
-        ax.text(0.5, 0.61 - i * 0.15, tool, ha='center', va='center', fontsize=10, color='black')
+        if tool:
+            ax.add_patch(plt.Rectangle((0.1, 0.55 - i * 0.15), 0.8, 0.12, color=color, ec='black', lw=2))
+            ax.text(0.5, 0.61 - i * 0.15, tool, ha='center', va='center', fontsize=10, color='black')
     
     ax.set_title(title, fontsize=14, fontweight='bold')
     return fig
 
 # Layout for toolboxes and central PDCA cycle icon
-col1, col2, col3 = st.columns([1, 0.5, 1])
+col1, col2, col3 = st.columns([1, 1, 1])
 
 with col1:
     st.pyplot(draw_tools_box("Plan Tools", plan_selection, "#FFFF66"))  # Yellow
     st.pyplot(draw_tools_box("Act Tools", act_selection, "#FFCC99"))  # Orange
 
-# Center section with PDCA cycle circular icon
+# Center section with large circular PDCA cycle arrow
 with col2:
-    st.markdown("<div style='text-align: center; font-size: 60px;'>🔄</div>", unsafe_allow_html=True)
-    st.markdown("<div style='text-align: center; font-size: 18px; font-weight: bold;'>PDCA Cycle</div>", unsafe_allow_html=True)
+    fig, ax = plt.subplots(figsize=(3, 3))
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis('off')
+    
+    # Draw large circular clockwise arrow
+    ax.text(0.5, 0.5, "🔄", ha='center', va='center', fontsize=50)  # Large cycle icon
+    st.pyplot(fig)
 
 with col3:
     st.pyplot(draw_tools_box("Do Tools", do_selection, "#99CCFF"))  # Blue
