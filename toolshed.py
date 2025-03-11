@@ -21,9 +21,6 @@ plan_selection = [
 ]
 
 st.sidebar.subheader("Do")
-st.session_state.setdefault("do1", do_tools[0])
-st.session_state.setdefault("do2", do_tools[1])
-st.session_state.setdefault("do3", do_tools[2])
 do_selection = [
     st.sidebar.selectbox("Select a Do tool", do_tools, key="do1"),
     st.sidebar.selectbox("Select another Do tool", do_tools, key="do2"),
@@ -31,9 +28,6 @@ do_selection = [
 ]
 
 st.sidebar.subheader("Check")
-st.session_state.setdefault("check1", check_tools[0])
-st.session_state.setdefault("check2", check_tools[1])
-st.session_state.setdefault("check3", check_tools[2])
 check_selection = [
     st.sidebar.selectbox("Select a Check tool", check_tools, key="check1"),
     st.sidebar.selectbox("Select another Check tool", check_tools, key="check2"),
@@ -41,99 +35,23 @@ check_selection = [
 ]
 
 st.sidebar.subheader("Act")
-st.session_state.setdefault("act1", act_tools[0])
-st.session_state.setdefault("act2", act_tools[1])
-st.session_state.setdefault("act3", act_tools[2])
 act_selection = [
     st.sidebar.selectbox("Select an Act tool", act_tools, key="act1"),
     st.sidebar.selectbox("Select another Act tool", act_tools, key="act2"),
     st.sidebar.selectbox("Select one more Act tool", act_tools, key="act3")
 ]
 
-# Display the full Toolshed UI
-st.markdown(
-    f"""
-    <style>
-        .container {{
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-        }}
-        .column {{
-            width: 45%;
-            text-align: center;
-            margin-bottom: 20px;
-        }}
-        .toolbox {{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 10px;
-        }}
-        .handle {{
-            width: 200px;
-            height: 50px;
-            background: black;
-            border-radius: 25px 25px 0 0;
-            text-align: center;
-            color: white;
-            font-weight: bold;
-            padding-top: 10px;
-        }}
-        .box {{
-            width: 250px;
-            height: 50px;
-            background: yellow;
-            margin: 5px;
-            border: 1px solid black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }}
-    </style>
-    <div class="container">
-        <div class="column">
-            <h2>Plan</h2>
-            <div class="toolbox">
-                <div class="handle">Tools</div>
-                <div class="box">{plan_selection[0]}</div>
-                <div class="box">{plan_selection[1]}</div>
-                <div class="box">{plan_selection[2]}</div>
-            </div>
-        </div>
-        <div class="column">
-            <h2>Do</h2>
-            <div class="toolbox">
-                <div class="handle">Tools</div>
-                <div class="box">{do_selection[0]}</div>
-                <div class="box">{do_selection[1]}</div>
-                <div class="box">{do_selection[2]}</div>
-            </div>
-        </div>
-        <div class="column">
-            <h2>Check</h2>
-            <div class="toolbox">
-                <div class="handle">Tools</div>
-                <div class="box">{check_selection[0]}</div>
-                <div class="box">{check_selection[1]}</div>
-                <div class="box">{check_selection[2]}</div>
-            </div>
-        </div>
-        <div class="column">
-            <h2>Act</h2>
-            <div class="toolbox">
-                <div class="handle">Tools</div>
-                <div class="box">{act_selection[0]}</div>
-                <div class="box">{act_selection[1]}</div>
-                <div class="box">{act_selection[2]}</div>
-            </div>
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# PDCA Cycle Explanation
+st.markdown("## 🔄 PDCA Continuous Improvement Cycle")
 
-st.success("Select the best tools for your Continuous Improvement journey!")
+st.markdown("### 🟡 PLAN")
+st.markdown("**Identify the issue:** Define the problem, gather relevant data. Formulate a hypothesis. What exactly are you trying to achieve by when? What resources do you need?")
+
+st.markdown("### 🔵 DO")
+st.markdown("**Quickly try out a solution:** Implement your plan, but start small. This stage is a controlled experiment, not full-scale deployment. Effective communication at this stage is key.")
+
+st.markdown("### 🟠 CHECK")
+st.markdown("**See if it works:** Step back and examine what happened. Did you get the desired result? Why or Why not? Compare your actual outcomes against your predictions. Look for insights, opportunities, costs, lessons, or unexpected consequences.")
+
+st.markdown("### 🟢 ACT")
+st.markdown("**Launch or adjust:** If your solution proved effective, how can you implement it more widely? If it fell short, what adjustments are needed? Perhaps you need to return to the planning stage with new insights.")
