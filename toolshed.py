@@ -13,7 +13,17 @@ act_tools = ["Deployment", "Quality", "Time", "Comms", "TQM", "Standard Work", "
 
 st.title("CDH Continuous Improvement Toolshed")
 
-# Ensure dropdowns remain in the sidebar
+# Function to ensure unique tool selection
+def unique_selectbox(label, options, key, selected_options):
+    available_options = [option for option in options if option not in selected_options]
+    if not available_options:
+        st.warning("All tools in this section have been selected. Please choose different tools.")
+        return None
+    selection = st.sidebar.selectbox(label, available_options, key=key)
+    selected_options.append(selection)
+    return selection
+
+# Sidebar with color-coded headers
 with st.sidebar:
     st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
     plan_selected = []
