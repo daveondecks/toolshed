@@ -87,14 +87,8 @@ with col1:
 
 # Center section with large circular PDCA cycle arrow
 with col2:
-    fig, ax = plt.subplots(figsize=(3, 3))
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-    ax.axis('off')
-    
-    # Draw large circular clockwise arrow
-    ax.text(0.5, 0.5, "🔄", ha='center', va='center', fontsize=50)  # Large cycle icon
-    st.pyplot(fig)
+    st.markdown("<div style='text-align: center; font-size: 50px;'>🔄</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; font-size: 18px; font-weight: bold;'>PDCA Cycle</div>", unsafe_allow_html=True)
 
 with col3:
     st.pyplot(draw_tools_box("Do Tools", do_selection, "#99CCFF"))  # Blue
