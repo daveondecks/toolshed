@@ -65,9 +65,9 @@ def draw_tools_box(title, tools, color):
     ax.axis('off')
     
     # Lower the curved toolbox handle even closer to the top of the rectangle
-    arc = patches.Arc((0.5, 0.82), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=6)
+    arc = patches.Arc((0.5, 0.79), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=6)
     ax.add_patch(arc)
-    ax.text(0.5, 0.84, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
+    ax.text(0.5, 0.81, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
     
     # Draw tool slots
     for i, tool in enumerate(tools):
@@ -78,16 +78,16 @@ def draw_tools_box(title, tools, color):
     ax.set_title(title, fontsize=14, fontweight='bold')
     return fig
 
-# Layout for toolboxes and central PDCA cycle icon
-col1, col2, col3 = st.columns([1, 1, 1])
+# Adjusted layout for proper PDCA quadrant alignment
+col1, col2, col3 = st.columns([1, 0.5, 1])
 
 with col1:
     st.pyplot(draw_tools_box("Plan Tools", plan_selection, "#FFFF66"))  # Yellow
     st.pyplot(draw_tools_box("Act Tools", act_selection, "#FFCC99"))  # Orange
 
-# Center section with PDCA cycle icon (lowered further to correct placement)
+# Center section with PDCA cycle icon (rebalanced layout)
 with col2:
-    st.markdown("<div style='text-align: center; margin-top: 200px; font-size: 50px;'>🔄</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; margin-top: 150px; font-size: 50px;'>🔄</div>", unsafe_allow_html=True)
     st.markdown("<div style='text-align: center; font-size: 18px; font-weight: bold;'>PDCA Cycle</div>", unsafe_allow_html=True)
 
 with col3:
