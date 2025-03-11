@@ -57,8 +57,19 @@ with st.sidebar:
         unique_selectbox("Select one more Act tool", act_tools, "act3", act_selected)
     ]
 
+# PDCA step descriptions
+descriptions = {
+    "Plan": "**Identify the issue:** Define the problem, gather relevant data. Formulate a hypothesis. What exactly are you trying to achieve by when? What resources do you need?",
+    "Do": "**Quickly try out a solution:** Implement your plan, but start small. This stage is a controlled experiment, not full-scale deployment. Effective communication at this stage is key.",
+    "Check": "**See if it works:** Step back and examine what happened. Did you get the desired result? Why or why not? Compare your actual outcomes against your predictions. Look for insights, opportunities, costs, lessons, or unexpected consequences.",
+    "Act": "**Launch or adjust:** If your solution proved effective, how can you implement it more widely? If it fell short, what adjustments are needed? Perhaps you need to return to the planning stage with new insights."
+}
+
 # Function to generate toolboxes with a curved top to look like a toolbox
-def draw_tools_box(title, tools, color):
+def draw_tools_box(title, tools, color, description_key):
+    with st.expander(f"ℹ️ {title} Info"):
+        st.markdown(descriptions[description_key])
+    
     fig, ax = plt.subplots(figsize=(4, 3))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -79,19 +90,14 @@ def draw_tools_box(title, tools, color):
     return fig
 
 # Adjusted layout for proper PDCA quadrant alignment
-col1, col2, col3 = st.columns([1, 0.5, 1])
+col1, col3 = st.columns([1, 1])
 
 with col1:
-    st.pyplot(draw_tools_box("Plan Tools", plan_selection, "#FFFF66"))  # Yellow
-    st.pyplot(draw_tools_box("Act Tools", act_selection, "#FFCC99"))  # Orange
-
-# Center section with corrected PDCA cycle icon (Clockwise arrows)
-with col2:
-    st.image("https://upload.wikimedia.org/wikipedia/commons/3/3a/PDCA_Cycle.svg", width=100)
-    st.markdown("<div style='text-align: center; font-size: 18px; font-weight: bold;'>PDCA Cycle</div>", unsafe_allow_html=True)
+    st.pyplot(draw_tools_box("Plan Tools", plan_selection, "#FFFF66", "Plan"))  # Yellow
+    st.pyplot(draw_tools_box("Act Tools", act_selection, "#FFCC99", "Act"))  # Orange
 
 with col3:
-    st.pyplot(draw_tools_box("Do Tools", do_selection, "#99CCFF"))  # Blue
-    st.pyplot(draw_tools_box("Check Tools", check_selection, "#99FF99"))  # Green
+    st.pyplot(draw_tools_box("Do Tools", do_selection, "#99CCFF", "Do"))  # Blue
+    st.pyplot(draw_tools_box("Check Tools", check_selection, "#99FF99", "Check"))  # Green
 
 st.success("Select the best tools for your Continuous Improvement journey!")
