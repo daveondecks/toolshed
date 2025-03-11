@@ -1,6 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-import numpy as np
+import matplotlib.patches as patches
 
 # Set wide layout
 st.set_page_config(layout="wide")
@@ -64,14 +64,14 @@ def draw_tools_box(title, tools, color):
     ax.axis('off')
     
     # Draw the curved toolbox handle using an arc
-    arc = plt.Arc((0.5, 0.85), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=3)
+    arc = patches.Arc((0.5, 0.92), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=3)
     ax.add_patch(arc)
-    ax.text(0.5, 0.9, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
+    ax.text(0.5, 0.94, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
     
     # Draw tool slots
     for i, tool in enumerate(tools):
         if tool:
-            ax.add_patch(plt.Rectangle((0.1, 0.55 - i * 0.15), 0.8, 0.12, color=color, ec='black', lw=2))
+            ax.add_patch(patches.Rectangle((0.1, 0.55 - i * 0.15), 0.8, 0.12, color=color, ec='black', lw=2))
             ax.text(0.5, 0.61 - i * 0.15, tool, ha='center', va='center', fontsize=10, color='black')
     
     ax.set_title(title, fontsize=14, fontweight='bold')
