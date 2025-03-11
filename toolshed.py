@@ -64,10 +64,10 @@ def draw_tools_box(title, tools, color):
     ax.set_ylim(0, 1)
     ax.axis('off')
     
-    # Lower the curved toolbox handle closer to the top of the rectangle
-    arc = patches.Arc((0.5, 0.85), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=6)
+    # Lower the curved toolbox handle even closer to the top of the rectangle
+    arc = patches.Arc((0.5, 0.82), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=6)
     ax.add_patch(arc)
-    ax.text(0.5, 0.87, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
+    ax.text(0.5, 0.84, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
     
     # Draw tool slots
     for i, tool in enumerate(tools):
@@ -85,9 +85,9 @@ with col1:
     st.pyplot(draw_tools_box("Plan Tools", plan_selection, "#FFFF66"))  # Yellow
     st.pyplot(draw_tools_box("Act Tools", act_selection, "#FFCC99"))  # Orange
 
-# Center section with PDCA cycle icon
+# Center section with PDCA cycle icon (lowered further to correct placement)
 with col2:
-    st.markdown("<div style='text-align: center; margin-top: 150px; font-size: 50px;'>🔄</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; margin-top: 200px; font-size: 50px;'>🔄</div>", unsafe_allow_html=True)
     st.markdown("<div style='text-align: center; font-size: 18px; font-weight: bold;'>PDCA Cycle</div>", unsafe_allow_html=True)
 
 with col3:
