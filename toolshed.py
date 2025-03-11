@@ -10,36 +10,6 @@ act_tools = ["Deployment", "Quality", "Time", "Comms", "TQM", "Standard Work", "
 
 st.title("CDH Continuous Improvement Toolshed")
 
-# Sidebar Dropdowns
-st.sidebar.header("Select Tools for Each Phase")
-st.sidebar.subheader("Plan")
-plan_selection = [
-    st.sidebar.selectbox("Select a Plan tool", plan_tools, key="plan1"),
-    st.sidebar.selectbox("Select another Plan tool", plan_tools, key="plan2"),
-    st.sidebar.selectbox("Select one more Plan tool", plan_tools, key="plan3")
-]
-
-st.sidebar.subheader("Do")
-do_selection = [
-    st.sidebar.selectbox("Select a Do tool", do_tools, key="do1"),
-    st.sidebar.selectbox("Select another Do tool", do_tools, key="do2"),
-    st.sidebar.selectbox("Select one more Do tool", do_tools, key="do3")
-]
-
-st.sidebar.subheader("Check")
-check_selection = [
-    st.sidebar.selectbox("Select a Check tool", check_tools, key="check1"),
-    st.sidebar.selectbox("Select another Check tool", check_tools, key="check2"),
-    st.sidebar.selectbox("Select one more Check tool", check_tools, key="check3")
-]
-
-st.sidebar.subheader("Act")
-act_selection = [
-    st.sidebar.selectbox("Select an Act tool", act_tools, key="act1"),
-    st.sidebar.selectbox("Select another Act tool", act_tools, key="act2"),
-    st.sidebar.selectbox("Select one more Act tool", act_tools, key="act3")
-]
-
 # Draw PDCA Cycle with Proper Clockwise Flow
 fig, ax = plt.subplots(figsize=(6,6))
 ax.set_xlim(0, 1)
@@ -64,14 +34,44 @@ st.pyplot(fig)
 # PDCA Cycle Explanation
 st.markdown("## 🔄 PDCA Continuous Improvement Cycle")
 
-st.markdown("### 🟡 PLAN")
-st.write("Identify the issue: Define the problem, gather relevant data. Formulate a hypothesis. What exactly are you trying to achieve by when? What resources do you need?")
+col1, col2 = st.columns(2)
 
-st.markdown("### 🔵 DO")
-st.write("Quickly try out a solution: Implement your plan, but start small. This stage is a controlled experiment, not full-scale deployment. Effective communication at this stage is key.")
+with col1:
+    st.markdown("### 🟡 PLAN")
+    st.write("Identify the issue: Define the problem, gather relevant data. Formulate a hypothesis. What exactly are you trying to achieve by when? What resources do you need?")
+    plan_selection = [
+        st.selectbox("Select a Plan tool", plan_tools, key="plan1"),
+        st.selectbox("Select another Plan tool", plan_tools, key="plan2"),
+        st.selectbox("Select one more Plan tool", plan_tools, key="plan3")
+    ]
+    st.write("**Selected Plan Tools:**", plan_selection)
 
-st.markdown("### 🟠 CHECK")
-st.write("See if it works: Step back and examine what happened. Did you get the desired result? Why or Why not? Compare your actual outcomes against your predictions. Look for insights, opportunities, costs, lessons, or unexpected consequences.")
+with col2:
+    st.markdown("### 🔵 DO")
+    st.write("Quickly try out a solution: Implement your plan, but start small. This stage is a controlled experiment, not full-scale deployment. Effective communication at this stage is key.")
+    do_selection = [
+        st.selectbox("Select a Do tool", do_tools, key="do1"),
+        st.selectbox("Select another Do tool", do_tools, key="do2"),
+        st.selectbox("Select one more Do tool", do_tools, key="do3")
+    ]
+    st.write("**Selected Do Tools:**", do_selection)
 
-st.markdown("### 🟢 ACT")
-st.write("Launch or adjust: If your solution proved effective, how can you implement it more widely? If it fell short, what adjustments are needed? Perhaps you need to return to the planning stage with new insights.")
+with col1:
+    st.markdown("### 🟠 CHECK")
+    st.write("See if it works: Step back and examine what happened. Did you get the desired result? Why or Why not? Compare your actual outcomes against your predictions. Look for insights, opportunities, costs, lessons, or unexpected consequences.")
+    check_selection = [
+        st.selectbox("Select a Check tool", check_tools, key="check1"),
+        st.selectbox("Select another Check tool", check_tools, key="check2"),
+        st.selectbox("Select one more Check tool", check_tools, key="check3")
+    ]
+    st.write("**Selected Check Tools:**", check_selection)
+
+with col2:
+    st.markdown("### 🟢 ACT")
+    st.write("Launch or adjust: If your solution proved effective, how can you implement it more widely? If it fell short, what adjustments are needed? Perhaps you need to return to the planning stage with new insights.")
+    act_selection = [
+        st.selectbox("Select an Act tool", act_tools, key="act1"),
+        st.selectbox("Select another Act tool", act_tools, key="act2"),
+        st.selectbox("Select one more Act tool", act_tools, key="act3")
+    ]
+    st.write("**Selected Act Tools:**", act_selection)
