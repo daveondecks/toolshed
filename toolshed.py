@@ -65,7 +65,7 @@ def draw_tools_box(title, tools, color):
     ax.axis('off')
     
     # Draw the curved toolbox handle using an arc
-    arc = patches.Arc((0.5, 0.92), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=3)
+    arc = patches.Arc((0.5, 0.92), 0.6, 0.3, angle=0, theta1=0, theta2=180, color='black', lw=6)
     ax.add_patch(arc)
     ax.text(0.5, 0.94, "Tools", ha='center', va='center', fontsize=12, color='black', fontweight='bold')
     
