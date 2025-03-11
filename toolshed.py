@@ -62,29 +62,17 @@ def draw_tools_box(title, tools, color):
     ax.set_title(title, fontsize=14, fontweight='bold')
     return fig
 
-# Layout for toolboxes and central PDCA cycle indicator
+# Layout for toolboxes and central PDCA cycle icon
 col1, col2, col3 = st.columns([1, 0.5, 1])
 
 with col1:
     st.pyplot(draw_tools_box("Plan Tools", plan_selection, "#FFFF66"))  # Yellow
     st.pyplot(draw_tools_box("Act Tools", act_selection, "#FFCC99"))  # Orange
 
-# Center section with PDCA cycle arrows
+# Center section with PDCA cycle circular icon
 with col2:
-    fig, ax = plt.subplots(figsize=(2, 2))
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-    ax.axis('off')
-    
-    # Draw circular arrows to indicate clockwise PDCA cycle
-    arrow_params = dict(head_width=0.05, head_length=0.05, fc='black', ec='black')
-    ax.arrow(0.5, 0.85, 0.0, -0.3, **arrow_params)  # PLAN → DO
-    ax.arrow(0.85, 0.5, -0.3, 0.0, **arrow_params)  # DO → CHECK
-    ax.arrow(0.5, 0.15, 0.0, 0.3, **arrow_params)  # CHECK → ACT
-    ax.arrow(0.15, 0.5, 0.3, 0.0, **arrow_params)  # ACT → PLAN
-    
-    ax.text(0.5, 0.5, "🔄", ha='center', va='center', fontsize=30)  # Large cycle icon
-    st.pyplot(fig)
+    st.markdown("<div style='text-align: center; font-size: 60px;'>🔄</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align: center; font-size: 18px; font-weight: bold;'>PDCA Cycle</div>", unsafe_allow_html=True)
 
 with col3:
     st.pyplot(draw_tools_box("Do Tools", do_selection, "#99CCFF"))  # Blue
