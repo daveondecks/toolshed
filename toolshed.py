@@ -25,15 +25,15 @@ def unique_selectbox(label, options, key, selected_options):
 
 # Sidebar with color-coded headers
 with st.sidebar:
-     with st.expander("📌 Plan", expanded=False):
+    with st.expander("📌 Plan", expanded=False):
         st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
+        # Ensure unique tool selection
         plan_selected = []
-        plan_selection = [
-        unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
-        unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
-        unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
-        ]
-     with st.expander("🛠️ Do", expanded=False):
+        plan_tool_1 = unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected)
+        plan_tool_2 = unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected)
+        plan_tool_3 = unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
+    
+    with st.expander("🛠️ Do", expanded=False):
         st.markdown("<h3 style='color: #99CCFF;'>🔵 Do</h3>", unsafe_allow_html=True)
         do_selected = []
         do_selection = [
@@ -42,7 +42,7 @@ with st.sidebar:
             unique_selectbox("Select one more Do tool", do_tools, "do3", do_selected)
         ]
 
-     with st.expander("✅ Check", expanded=False):
+    with st.expander("✅ Check", expanded=False):
         st.markdown("<h3 style='color: #99FF99;'>🟢 Check</h3>", unsafe_allow_html=True)
         check_selected = []
         check_selection = [
@@ -51,7 +51,7 @@ with st.sidebar:
             unique_selectbox("Select one more Check tool", check_tools, "check3", check_selected)
         ]
 
-     with st.expander("🚀 Act", expanded=False):
+    with st.expander("🚀 Act", expanded=False):
         st.markdown("<h3 style='color: #FFCC99;'>🟠 Act</h3>", unsafe_allow_html=True)
         act_selected = []
         act_selection = [
