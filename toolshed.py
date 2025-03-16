@@ -4,41 +4,41 @@ with st.sidebar:
     with st.expander("📌 Plan", expanded=False):
         st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
         plan_selected = []
-        plan_tool_1 = unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected)
+        plan_tool_1 = st.selectbox("Select a Plan tool", plan_tools, key="plan1")
         plan_selected.append(plan_tool_1)
-        plan_tool_2 = unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected)
+        plan_tool_2 = st.selectbox("Select another Plan tool", plan_tools, key="plan2")
         plan_selected.append(plan_tool_2)
-        plan_tool_3 = unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
+        plan_tool_3 = st.selectbox("Select one more Plan tool", plan_tools, key="plan3")
         plan_selected.append(plan_tool_3)
 
     with st.expander("🛠️ Do", expanded=False):
         st.markdown("<h3 style='color: #66FF66;'>🟢 Do</h3>", unsafe_allow_html=True)
         do_selected = []
-        do_tool_1 = unique_selectbox("Select a Do tool", do_tools, "do1", do_selected)
+        do_tool_1 = st.selectbox("Select a Do tool", do_tools, key="do1")
         do_selected.append(do_tool_1)
-        do_tool_2 = unique_selectbox("Select another Do tool", do_tools, "do2", do_selected)
+        do_tool_2 = st.selectbox("Select another Do tool", do_tools, key="do2")
         do_selected.append(do_tool_2)
-        do_tool_3 = unique_selectbox("Select one more Do tool", do_tools, "do3", do_selected)
+        do_tool_3 = st.selectbox("Select one more Do tool", do_tools, key="do3")
         do_selected.append(do_tool_3)
 
     with st.expander("✅ Check", expanded=False):
         st.markdown("<h3 style='color: #66CCFF;'>🔵 Check</h3>", unsafe_allow_html=True)
         check_selected = []
-        check_tool_1 = unique_selectbox("Select a Check tool", check_tools, "check1", check_selected)
+        check_tool_1 = st.selectbox("Select a Check tool", check_tools, key="check1")
         check_selected.append(check_tool_1)
-        check_tool_2 = unique_selectbox("Select another Check tool", check_tools, "check2", check_selected)
+        check_tool_2 = st.selectbox("Select another Check tool", check_tools, key="check2")
         check_selected.append(check_tool_2)
-        check_tool_3 = unique_selectbox("Select one more Check tool", check_tools, "check3", check_selected)
+        check_tool_3 = st.selectbox("Select one more Check tool", check_tools, key="check3")
         check_selected.append(check_tool_3)
 
     with st.expander("🚀 Act", expanded=False):
         st.markdown("<h3 style='color: #FF6666;'>🔴 Act</h3>", unsafe_allow_html=True)
         act_selected = []
-        act_tool_1 = unique_selectbox("Select an Act tool", act_tools, "act1", act_selected)
+        act_tool_1 = st.selectbox("Select an Act tool", act_tools, key="act1")
         act_selected.append(act_tool_1)
-        act_tool_2 = unique_selectbox("Select another Act tool", act_tools, "act2", act_selected)
+        act_tool_2 = st.selectbox("Select another Act tool", act_tools, key="act2")
         act_selected.append(act_tool_2)
-        act_tool_3 = unique_selectbox("Select one more Act tool", act_tools, "act3", act_selected)
+        act_tool_3 = st.selectbox("Select one more Act tool", act_tools, key="act3")
         act_selected.append(act_tool_3)
 import streamlit as st
 import matplotlib.pyplot as plt
