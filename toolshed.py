@@ -85,7 +85,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # Set wide layout
-st.set_page_config(layout="wide")
 
 # Define tools under each category
 plan_tools = ["MoSCoW", "Five Ys", "VSM", "Flow Chart", "Six S’s", "Process Map", "DMAIC", "RACI", "Route Cause", "VOC"]
