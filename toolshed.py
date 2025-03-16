@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import datetime
 
 # Set page configuration
 st.set_page_config(layout="wide")
@@ -8,10 +9,10 @@ st.set_page_config(layout="wide")
 if "selected_tab" not in st.session_state:
     st.session_state["selected_tab"] = "Tool Shed"  # Default tab
 
-# Load CSV Data (with Uppercase 'Data' folder)
+# Load CSV Data
 @st.cache_data
 def load_data():
-    return pd.read_csv("Data/Tools_description.csv")  # 🔹 Corrected Path
+    return pd.read_csv("Data/Tools_description.csv")  # Ensure correct path
 
 tool_data = load_data()
 
@@ -70,7 +71,7 @@ with st.sidebar:
         ]
 
 # --- TOP NAVIGATION TABS ---
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     if st.button("🛠️ Tool Shed", key="tool_shed"):
@@ -84,44 +85,19 @@ with col3:
     if st.button("🎥 Video Library", key="video_library"):
         st.session_state["selected_tab"] = "Video Library"
 
+with col4:
+    if st.button("📄 Project Plan", key="project_plan"):
+        st.session_state["selected_tab"] = "Project Plan"
+
 # --- DISPLAY CONTENT BASED ON SELECTED TAB ---
 if st.session_state["selected_tab"] == "Tool Shed":
     st.header("🛠️ Tool Shed")
     st.write("This section provides a collection of tools for Continuous Improvement (CI).")
 
-    # PDCA step descriptions
-    descriptions = {
-        "Plan": "**Identify the issue:** Define the problem, gather relevant data, and formulate a hypothesis.",
-        "Do": "**Quickly try out a solution:** Implement the plan on a small scale before full-scale deployment.",
-        "Check": "**See if it works:** Evaluate results, compare against predictions, and gain insights.",
-        "Act": "**Launch or adjust:** Implement successful changes broadly, or refine and retry if needed."
-    }
-
-    # Function to display toolboxes
-    def draw_tools_box(title, tools, description_key):
-        with st.expander(f"ℹ️ {title} Info"):
-            st.markdown(descriptions[description_key])
-
-        st.markdown(f"### {title} Tools")
-        st.write(", ".join(tools))  # Display tools as a simple list
-
-    # 2x2 Grid Layout
-    col1, col2 = st.columns(2)
-
-    with col1:
-        draw_tools_box("Plan Tools", plan_selection, "Plan")
-        draw_tools_box("Act Tools", act_selection, "Act")
-
-    with col2:
-        draw_tools_box("Do Tools", do_selection, "Do")
-        draw_tools_box("Check Tools", check_selection, "Check")
-
-    st.success("✅ Select the best tools for your Continuous Improvement journey!")
-
 elif st.session_state["selected_tab"] == "Tool Dictionary":
     st.header("📚 Tool Dictionary")
     st.write("Search and explore CI tools with descriptions and links.")
-
+    
     search_query = st.text_input("🔍 Search for a tool:")
     filtered_data = tool_data[tool_data['Tool Name'].str.contains(search_query, case=False, na=False)]
 
@@ -141,4 +117,40 @@ elif st.session_state["selected_tab"] == "Video Library":
     # Placeholder for video content
     st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")  # Replace with relevant videos
 
-st.success("🚀 Toolshed fully updated with unique selections, sidebar tools, searchable database & PDCA tools!")
+elif st.session_state["selected_tab"] == "Project Plan":
+    st.header("📄 Project Plan Preview")
+
+    # User Inputs for Project Plan
+    project_name = st.text_input("📌 Enter Project Name")
+    project_owner = st.text_input("👤 Enter Project Owner")
+    date_created = datetime.date.today().strftime("%Y-%m-%d")
+
+    if st.button("Generate Preview"):
+        # Create Dataframe for Selected Tools and Descriptions
+        selected_tools = {
+            "Plan": plan_selection,
+            "Do": do_selection,
+            "Check": check_selection,
+            "Act": act_selection
+        }
+
+        project_plan_data = []
+        for category, tools in selected_tools.items():
+            for tool in tools:
+                if tool:
+                    desc = tool_data[tool_data['Tool Name'] == tool]['Description'].values
+                    project_plan_data.append({"Category": category, "Tool": tool, "Description": desc[0] if len(desc) > 0 else "N/A"})
+
+        df = pd.DataFrame(project_plan_data)
+
+        # Display Project Plan Preview
+        st.write(f"### 📌 Project Name: {project_name}")
+        st.write(f"👤 **Project Owner:** {project_owner}")
+        st.write(f"📅 **Date Created:** {date_created}")
+
+        if not df.empty:
+            st.dataframe(df)
+        else:
+            st.warning("⚠️ No tools selected yet!")
+
+st.success("🚀 Toolshed fully updated with Project Plan preview, unique selections & searchable database!")
