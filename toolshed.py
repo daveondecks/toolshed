@@ -21,42 +21,52 @@ do_tools = ["Gemba", "Kaizen", "SPC", "Kanban", "Pareto Chart", "Regression", "P
 check_tools = ["Control Charts", "Check sheet", "Dashboard", "X-Matrix", "Heat Map", "Estimation", "DPMO", "Benchmarking", "Discovery", "Testing"]
 act_tools = ["Deployment", "Quality", "Time", "Comms", "TQM", "Standard Work", "Lessons", "Risk Matrix", "Stakeholders", "Change Mgt"]
 
-# --- SIDEBAR (PDCA Expanders + Selection Boxes) ---
+# --- Function to ensure unique tool selection ---
+def unique_selectbox(label, options, key, selected_options):
+    available_options = [option for option in options if option not in selected_options]
+    if not available_options:
+        st.warning(f"All {label} tools have been selected. Please change your choices.")
+        return None
+    selection = st.selectbox(label, available_options, key=key)
+    selected_options.append(selection)
+    return selection
+
+# --- SIDEBAR (PDCA Expanders + Unique Selection Boxes) ---
 with st.sidebar:
     with st.expander("📌 Plan", expanded=False):
         st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
         plan_selected = []
         plan_selection = [
-            st.selectbox("Select a Plan tool", plan_tools, key="plan1"),
-            st.selectbox("Select another Plan tool", plan_tools, key="plan2"),
-            st.selectbox("Select one more Plan tool", plan_tools, key="plan3")
+            unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
+            unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
+            unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
         ]
 
     with st.expander("🛠️ Do", expanded=False):
         st.markdown("<h3 style='color: #99CCFF;'>🔨 Do</h3>", unsafe_allow_html=True)
         do_selected = []
         do_selection = [
-            st.selectbox("Select a Do tool", do_tools, key="do1"),
-            st.selectbox("Select another Do tool", do_tools, key="do2"),
-            st.selectbox("Select one more Do tool", do_tools, key="do3")
+            unique_selectbox("Select a Do tool", do_tools, "do1", do_selected),
+            unique_selectbox("Select another Do tool", do_tools, "do2", do_selected),
+            unique_selectbox("Select one more Do tool", do_tools, "do3", do_selected)
         ]
 
     with st.expander("✅ Check", expanded=False):
         st.markdown("<h3 style='color: #99FF99;'>✅ Check</h3>", unsafe_allow_html=True)
         check_selected = []
         check_selection = [
-            st.selectbox("Select a Check tool", check_tools, key="check1"),
-            st.selectbox("Select another Check tool", check_tools, key="check2"),
-            st.selectbox("Select one more Check tool", check_tools, key="check3")
+            unique_selectbox("Select a Check tool", check_tools, "check1", check_selected),
+            unique_selectbox("Select another Check tool", check_tools, "check2", check_selected),
+            unique_selectbox("Select one more Check tool", check_tools, "check3", check_selected)
         ]
 
     with st.expander("🚀 Act", expanded=False):
         st.markdown("<h3 style='color: #FFCC99;'>🚀 Act</h3>", unsafe_allow_html=True)
         act_selected = []
         act_selection = [
-            st.selectbox("Select an Act tool", act_tools, key="act1"),
-            st.selectbox("Select another Act tool", act_tools, key="act2"),
-            st.selectbox("Select one more Act tool", act_tools, key="act3")
+            unique_selectbox("Select an Act tool", act_tools, "act1", act_selected),
+            unique_selectbox("Select another Act tool", act_tools, "act2", act_selected),
+            unique_selectbox("Select one more Act tool", act_tools, "act3", act_selected)
         ]
 
 # --- TOP NAVIGATION TABS ---
@@ -131,4 +141,4 @@ elif st.session_state["selected_tab"] == "Video Library":
     # Placeholder for video content
     st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")  # Replace with relevant videos
 
-st.success("🚀 Toolshed fully updated with sidebar tools, searchable database & PDCA tools!")
+st.success("🚀 Toolshed fully updated with unique selections, sidebar tools, searchable database & PDCA tools!")
