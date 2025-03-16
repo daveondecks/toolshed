@@ -1,4 +1,5 @@
 import streamlit as st
+st.set_page_config(layout="wide")
 # Sidebar with PDCA Expanders and Select Dropdowns (with unique keys)
 with st.sidebar:
     with st.expander("📌 Plan", expanded=False):
