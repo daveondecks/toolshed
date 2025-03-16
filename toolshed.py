@@ -1,20 +1,11 @@
 import streamlit as st
-# Sidebar with PDCA Expanders
-with st.sidebar:
-    with st.expander("📌 Plan"):
-        st.write("Content for the Plan section.")
-    with st.expander("🛠️ Do"):
-        st.write("Content for the Do section.")
-    with st.expander("✅ Check"):
-        st.write("Content for the Check section.")
-    with st.expander("🚀 Act"):
-        st.write("Content for the Act section.")
+st.set_page_config(layout='wide')
+
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # Set wide layout
-st.set_page_config(layout="wide")
 
 # Define tools under each category
 plan_tools = ["MoSCoW", "Five Ys", "VSM", "Flow Chart", "Six S’s", "Process Map", "DMAIC", "RACI", "Route Cause", "VOC"]
