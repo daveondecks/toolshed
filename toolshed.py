@@ -53,7 +53,22 @@ with st.sidebar:
         act_tool_2 = unique_selectbox("Select another Act tool", act_tools, "act2", act_selected)
         act_tool_3 = unique_selectbox("Select one more Act tool", act_tools, "act3", act_selected)
 
-# Main content
+# Main content with tabs
 st.title("CDH Continuous Improvement Toolshed")
-st.header("Welcome to the CI Tool Shed")
+st.markdown("## Welcome to the CI Tool Shed")
 st.write("This section provides tools and techniques for continuous improvement.")
+
+# Create tabs for different sections
+tab1, tab2, tab3 = st.tabs(["Tool Shed", "Tool Dictionary", "Video Library"])
+
+with tab1:
+    st.header("🛠️ Tool Shed")
+    st.write("This section provides a collection of tools for Continuous Improvement (CI).")
+
+with tab2:
+    st.header("📖 Tool Dictionary")
+    st.write("This section contains definitions and explanations of various tools.")
+
+with tab3:
+    st.header("🎥 Video Library")
+    st.write("This section provides video resources for learning more about CI tools.")
