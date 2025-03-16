@@ -1,3 +1,5 @@
+import streamlit as st
+st.set_page_config(layout='wide')
 
 import streamlit as st
 
@@ -13,7 +15,7 @@ with st.sidebar:
         st.write("Content for the Act section.")
 
 # Main page with tabs
-st.title("One Team CI Tool Shed")
+st.title("Tool Shed")
 
 tabs = st.tabs(["Tool Dictionary", "Video Library"])
 
@@ -31,7 +33,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # Set wide layout
-st.set_page_config(layout="wide")
 
 # Define tools under each category
 plan_tools = ["MoSCoW", "Five Ys", "VSM", "Flow Chart", "Six S’s", "Process Map", "DMAIC", "RACI", "Route Cause", "VOC"]
