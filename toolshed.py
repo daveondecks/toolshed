@@ -3,11 +3,14 @@ import streamlit as st
 # Set page configuration
 st.set_page_config(layout='wide')
 
-# Sidebar with PDCA Expanders (only visible on the main page)
-if 'selected_tab' not in st.session_state:
-    st.session_state['selected_tab'] = 'Tool Shed'
+# Define tabs
+selected_tab = st.tabs(["Tool Shed", "Tool Dictionary", "Video Library"])
 
-if st.session_state['selected_tab'] == 'Tool Shed':
+# Check which tab is selected
+if selected_tab[0]:
+    st.session_state['selected_tab'] = 'Tool Shed'
+    
+    # Sidebar with PDCA Expanders (only for Tool Shed tab)
     with st.sidebar:
         with st.expander("📌 Plan"):
             st.write("Content for the Plan section.")
@@ -21,23 +24,22 @@ if st.session_state['selected_tab'] == 'Tool Shed':
         with st.expander("🚀 Act"):
             st.write("Content for the Act section.")
             st.write("Suggest improvements and corrective actions.")
-
-# Main page with tabs
-st.title("Tool Shed")
-
-tab_selection = st.tabs(["Tool Shed", "Tool Dictionary", "Video Library"])
-
-if tab_selection[0]:
-    st.session_state['selected_tab'] = 'Tool Shed'
+    
+    # Main content for Tool Shed
+    st.title("Tool Shed")
     st.header("🛠️ Welcome to the Tool Shed")
     st.write("This section contains tools and resources for CI (Continuous Improvement).")
 
-elif tab_selection[1]:
+elif selected_tab[1]:
     st.session_state['selected_tab'] = 'Tool Dictionary'
+    st.sidebar.empty()  # Hide sidebar
+    st.title("Tool Dictionary")
     st.write("")  # Blank page
 
-elif tab_selection[2]:
+elif selected_tab[2]:
     st.session_state['selected_tab'] = 'Video Library'
+    st.sidebar.empty()  # Hide sidebar
+    st.title("Video Library")
     st.write("")  # Blank page
 
 # --- Existing functionality from toolshed.py ---
