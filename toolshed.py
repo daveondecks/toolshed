@@ -1,9 +1,94 @@
 import streamlit as st
+st.set_page_config(layout="wide")
+
+# Define placeholder tool lists (Replace with actual data sources)
+plan_tools = ["MoSCoW", "Five Whys", "VSM", "Affinity Diagram", "Fishbone Diagram"]
+do_tools = ["Gemba", "Pilot Test", "5S", "Standard Work", "Process Mapping"]
+check_tools = ["Control Charts", "Audit", "Survey", "Feedback Loop", "Benchmarking"]
+act_tools = ["PDCA Cycle", "Lessons Learned", "Training", "Process Change", "Kaizen Event"]
+
+# Sidebar (Ensuring no duplication)
+with st.sidebar:
+    with st.expander("📌 Plan", expanded=False):
+        st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
+        plan_selected = []
+        plan_tool_1 = st.selectbox("Select a Plan tool", plan_tools, key="plan_tool_1_fixed")
+        plan_tool_2 = st.selectbox("Select another Plan tool", plan_tools, key="plan_tool_2_fixed")
+        plan_tool_3 = st.selectbox("Select one more Plan tool", plan_tools, key="plan_tool_3_fixed")
+
+    with st.expander("🛠️ Do", expanded=False):
+        st.markdown("<h3 style='color: #66FF66;'>🟢 Do</h3>", unsafe_allow_html=True)
+        do_selected = []
+        do_tool_1 = st.selectbox("Select a Do tool", do_tools, key="do_tool_1_fixed")
+        do_tool_2 = st.selectbox("Select another Do tool", do_tools, key="do_tool_2_fixed")
+        do_tool_3 = st.selectbox("Select one more Do tool", do_tools, key="do_tool_3_fixed")
+
+    with st.expander("✅ Check", expanded=False):
+        st.markdown("<h3 style='color: #66CCFF;'>🔵 Check</h3>", unsafe_allow_html=True)
+        check_selected = []
+        check_tool_1 = st.selectbox("Select a Check tool", check_tools, key="check_tool_1_fixed")
+        check_tool_2 = st.selectbox("Select another Check tool", check_tools, key="check_tool_2_fixed")
+        check_tool_3 = st.selectbox("Select one more Check tool", check_tools, key="check_tool_3_fixed")
+
+    with st.expander("🚀 Act", expanded=False):
+        st.markdown("<h3 style='color: #FF6666;'>🔴 Act</h3>", unsafe_allow_html=True)
+        act_selected = []
+        act_tool_1 = st.selectbox("Select an Act tool", act_tools, key="act_tool_1_fixed")
+        act_tool_2 = st.selectbox("Select another Act tool", act_tools, key="act_tool_2_fixed")
+        act_tool_3 = st.selectbox("Select one more Act tool", act_tools, key="act_tool_3_fixed")
+import streamlit as st
+# Define placeholder tool lists (Replace with actual data sources)
+plan_tools = ["MoSCoW", "Five Whys", "VSM", "Affinity Diagram", "Fishbone Diagram"]
+do_tools = ["Gemba", "Pilot Test", "5S", "Standard Work", "Process Mapping"]
+check_tools = ["Control Charts", "Audit", "Survey", "Feedback Loop", "Benchmarking"]
+act_tools = ["PDCA Cycle", "Lessons Learned", "Training", "Process Change", "Kaizen Event"]
+import streamlit as st
+# Sidebar with PDCA Expanders and Select Dropdowns
+with st.sidebar:
+    with st.expander("📌 Plan", expanded=False):
+        st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
+        plan_selected = []
+        plan_tool_1 = st.selectbox("Select a Plan tool", plan_tools, key="plan1")
+        plan_selected.append(plan_tool_1)
+        plan_tool_2 = st.selectbox("Select another Plan tool", plan_tools, key="plan2")
+        plan_selected.append(plan_tool_2)
+        plan_tool_3 = st.selectbox("Select one more Plan tool", plan_tools, key="plan3")
+        plan_selected.append(plan_tool_3)
+
+    with st.expander("🛠️ Do", expanded=False):
+        st.markdown("<h3 style='color: #66FF66;'>🟢 Do</h3>", unsafe_allow_html=True)
+        do_selected = []
+        do_tool_1 = st.selectbox("Select a Do tool", do_tools, key="do1")
+        do_selected.append(do_tool_1)
+        do_tool_2 = st.selectbox("Select another Do tool", do_tools, key="do2")
+        do_selected.append(do_tool_2)
+        do_tool_3 = st.selectbox("Select one more Do tool", do_tools, key="do3")
+        do_selected.append(do_tool_3)
+
+    with st.expander("✅ Check", expanded=False):
+        st.markdown("<h3 style='color: #66CCFF;'>🔵 Check</h3>", unsafe_allow_html=True)
+        check_selected = []
+        check_tool_1 = st.selectbox("Select a Check tool", check_tools, key="check1")
+        check_selected.append(check_tool_1)
+        check_tool_2 = st.selectbox("Select another Check tool", check_tools, key="check2")
+        check_selected.append(check_tool_2)
+        check_tool_3 = st.selectbox("Select one more Check tool", check_tools, key="check3")
+        check_selected.append(check_tool_3)
+
+    with st.expander("🚀 Act", expanded=False):
+        st.markdown("<h3 style='color: #FF6666;'>🔴 Act</h3>", unsafe_allow_html=True)
+        act_selected = []
+        act_tool_1 = st.selectbox("Select an Act tool", act_tools, key="act1")
+        act_selected.append(act_tool_1)
+        act_tool_2 = st.selectbox("Select another Act tool", act_tools, key="act2")
+        act_selected.append(act_tool_2)
+        act_tool_3 = st.selectbox("Select one more Act tool", act_tools, key="act3")
+        act_selected.append(act_tool_3)
+import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # Set wide layout
-st.set_page_config(layout="wide")
 
 # Define tools under each category
 plan_tools = ["MoSCoW", "Five Ys", "VSM", "Flow Chart", "Six S’s", "Process Map", "DMAIC", "RACI", "Route Cause", "VOC"]
@@ -25,10 +110,9 @@ def unique_selectbox(label, options, key, selected_options):
 
 # Sidebar with color-coded headers
 with st.sidebar:
-    with st.expander("📌 Plan", expanded=False):
-         st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
-        plan_selected = []
-        plan_selection = [
+    st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
+    plan_selected = []
+    plan_selection = [
         unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
         unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
         unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
