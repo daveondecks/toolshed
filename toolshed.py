@@ -29,9 +29,9 @@ with st.sidebar:
         st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
         plan_selected = []
         plan_selection = [
-            unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
-            unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
-            unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
+        unique_selectbox("Select a Plan tool", plan_tools, "plan1", plan_selected),
+        unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
+        unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
         ]
      with st.expander("🛠️ Do", expanded=False):
         st.markdown("<h3 style='color: #99CCFF;'>🔵 Do</h3>", unsafe_allow_html=True)
