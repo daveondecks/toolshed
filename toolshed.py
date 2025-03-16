@@ -33,7 +33,7 @@ with st.sidebar:
             unique_selectbox("Select another Plan tool", plan_tools, "plan2", plan_selected),
             unique_selectbox("Select one more Plan tool", plan_tools, "plan3", plan_selected)
         ]
-    with st.expander("🛠️ Do", expanded=False):
+     with st.expander("🛠️ Do", expanded=False):
         st.markdown("<h3 style='color: #99CCFF;'>🔵 Do</h3>", unsafe_allow_html=True)
         do_selected = []
         do_selection = [
@@ -42,7 +42,7 @@ with st.sidebar:
             unique_selectbox("Select one more Do tool", do_tools, "do3", do_selected)
         ]
 
-    with st.expander("✅ Check", expanded=False):
+     with st.expander("✅ Check", expanded=False):
         st.markdown("<h3 style='color: #99FF99;'>🟢 Check</h3>", unsafe_allow_html=True)
         check_selected = []
         check_selection = [
@@ -51,7 +51,7 @@ with st.sidebar:
             unique_selectbox("Select one more Check tool", check_tools, "check3", check_selected)
         ]
 
-    with st.expander("🚀 Act", expanded=False):
+     with st.expander("🚀 Act", expanded=False):
         st.markdown("<h3 style='color: #FFCC99;'>🟠 Act</h3>", unsafe_allow_html=True)
         act_selected = []
         act_selection = [
