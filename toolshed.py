@@ -9,7 +9,7 @@ st.set_page_config(layout="wide")
 # Load CSV data
 @st.cache_data
 def load_data():
-    return pd.read_csv("data/Tools_description.csv")
+    return pd.read_csv("Data/Tools_description.csv")
 
 tool_data = load_data()
 
