@@ -23,7 +23,7 @@ def unique_selectbox(label, options, key, selected_options):
     selected_options.append(selection)
     return selection
 
-# Sidebar with color-coded headers
+# Sidebar with PDCA expanders and tool selection
 with st.sidebar:
     with st.expander("📌 Plan", expanded=False):
         st.markdown("<h3 style='color: #FFFF66;'>🟡 Plan</h3>", unsafe_allow_html=True)
@@ -64,6 +64,27 @@ tab1, tab2, tab3 = st.tabs(["Tool Shed", "Tool Dictionary", "Video Library"])
 with tab1:
     st.header("🛠️ Tool Shed")
     st.write("This section provides a collection of tools for Continuous Improvement (CI).")
+
+    # Display selected tools from the sidebar under each section
+    st.subheader("📌 Plan Tools Selected")
+    st.write(f"**1:** {plan_tool_1 if plan_tool_1 else 'None Selected'}")
+    st.write(f"**2:** {plan_tool_2 if plan_tool_2 else 'None Selected'}")
+    st.write(f"**3:** {plan_tool_3 if plan_tool_3 else 'None Selected'}")
+
+    st.subheader("🛠️ Do Tools Selected")
+    st.write(f"**1:** {do_tool_1 if do_tool_1 else 'None Selected'}")
+    st.write(f"**2:** {do_tool_2 if do_tool_2 else 'None Selected'}")
+    st.write(f"**3:** {do_tool_3 if do_tool_3 else 'None Selected'}")
+
+    st.subheader("✅ Check Tools Selected")
+    st.write(f"**1:** {check_tool_1 if check_tool_1 else 'None Selected'}")
+    st.write(f"**2:** {check_tool_2 if check_tool_2 else 'None Selected'}")
+    st.write(f"**3:** {check_tool_3 if check_tool_3 else 'None Selected'}")
+
+    st.subheader("🚀 Act Tools Selected")
+    st.write(f"**1:** {act_tool_1 if act_tool_1 else 'None Selected'}")
+    st.write(f"**2:** {act_tool_2 if act_tool_2 else 'None Selected'}")
+    st.write(f"**3:** {act_tool_3 if act_tool_3 else 'None Selected'}")
 
 with tab2:
     st.header("📖 Tool Dictionary")
