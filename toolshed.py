@@ -1,3 +1,31 @@
+
+import streamlit as st
+
+# Sidebar with PDCA Expanders
+with st.sidebar:
+    with st.expander("📌 Plan"):
+        st.write("Content for the Plan section.")
+    with st.expander("🛠️ Do"):
+        st.write("Content for the Do section.")
+    with st.expander("✅ Check"):
+        st.write("Content for the Check section.")
+    with st.expander("🚀 Act"):
+        st.write("Content for the Act section.")
+
+# Main page with tabs
+st.title("One Team CI Tool Shed")
+
+tabs = st.tabs(["Tool Dictionary", "Video Library"])
+
+with tabs[0]:
+    st.header("📖 Tool Dictionary")
+    st.write("This section contains definitions and explanations of various tools.")
+
+with tabs[1]:
+    st.header("🎥 Video Library")
+    st.write("This section contains instructional videos and guides.")
+
+# Retaining the original functionality
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -101,3 +129,4 @@ with col3:
     st.pyplot(draw_tools_box("Check Tools", check_selection, "#99FF99", "Check"))  # Green
 
 st.success("Select the best tools for your Continuous Improvement journey!")
+
