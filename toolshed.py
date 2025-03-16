@@ -1,6 +1,12 @@
 import streamlit as st
 st.set_page_config(layout="wide")
 
+# Define placeholder tool lists (Replace with actual data sources)
+plan_tools = ["MoSCoW", "Five Whys", "VSM", "Affinity Diagram", "Fishbone Diagram"]
+do_tools = ["Gemba", "Pilot Test", "5S", "Standard Work", "Process Mapping"]
+check_tools = ["Control Charts", "Audit", "Survey", "Feedback Loop", "Benchmarking"]
+act_tools = ["PDCA Cycle", "Lessons Learned", "Training", "Process Change", "Kaizen Event"]
+
 # Sidebar with PDCA Expanders and Select Dropdowns (with unique keys)
 with st.sidebar:
     with st.expander("📌 Plan", expanded=False):
