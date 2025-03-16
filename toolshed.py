@@ -4,13 +4,11 @@ import streamlit as st
 st.set_page_config(layout='wide')
 
 # Define tabs
-selected_tab = st.tabs(["Tool Shed", "Tool Dictionary", "Video Library"])
+tab_names = ["Tool Shed", "Tool Dictionary", "Video Library"]
+selected_tab = st.radio("Select a tab:", tab_names, horizontal=True)
 
-# Check which tab is selected
-if selected_tab[0]:
-    st.session_state['selected_tab'] = 'Tool Shed'
-    
-    # Sidebar with PDCA Expanders (only for Tool Shed tab)
+# Tool Shed page with sidebar expanders
+if selected_tab == "Tool Shed":
     with st.sidebar:
         with st.expander("📌 Plan"):
             st.write("Content for the Plan section.")
@@ -24,20 +22,20 @@ if selected_tab[0]:
         with st.expander("🚀 Act"):
             st.write("Content for the Act section.")
             st.write("Suggest improvements and corrective actions.")
-    
+
     # Main content for Tool Shed
     st.title("Tool Shed")
     st.header("🛠️ Welcome to the Tool Shed")
     st.write("This section contains tools and resources for CI (Continuous Improvement).")
 
-elif selected_tab[1]:
-    st.session_state['selected_tab'] = 'Tool Dictionary'
+# Tool Dictionary (Blank Page, No Sidebar)
+elif selected_tab == "Tool Dictionary":
     st.sidebar.empty()  # Hide sidebar
     st.title("Tool Dictionary")
     st.write("")  # Blank page
 
-elif selected_tab[2]:
-    st.session_state['selected_tab'] = 'Video Library'
+# Video Library (Blank Page, No Sidebar)
+elif selected_tab == "Video Library":
     st.sidebar.empty()  # Hide sidebar
     st.title("Video Library")
     st.write("")  # Blank page
