@@ -1,5 +1,9 @@
 import streamlit as st
+
+# Set page configuration (must be the first Streamlit command)
 st.set_page_config(layout="wide")
+
+import streamlit as st
 # Define placeholder tool lists (Replace with actual data sources)
 plan_tools = ["MoSCoW", "Five Whys", "VSM", "Affinity Diagram", "Fishbone Diagram"]
 do_tools = ["Gemba", "Pilot Test", "5S", "Standard Work", "Process Mapping"]
@@ -51,6 +55,8 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+# Set wide layout
+st.set_page_config(layout="wide")
 
 # Define tools under each category
 plan_tools = ["MoSCoW", "Five Ys", "VSM", "Flow Chart", "Six S’s", "Process Map", "DMAIC", "RACI", "Route Cause", "VOC"]
