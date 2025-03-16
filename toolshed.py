@@ -1,7 +1,6 @@
 import streamlit as st
-
-# Set page configuration (must be the first Streamlit command)
 st.set_page_config(layout="wide")
+# Set page configuration (must be the first Streamlit command)
 
 import streamlit as st
 # Define placeholder tool lists (Replace with actual data sources)
