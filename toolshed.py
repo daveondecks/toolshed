@@ -267,8 +267,11 @@ with tab4:
                 pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
                 pdf.set_font("Arial", '', 12)
 
-                task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
-                description = row['Description'] if row['Description'] else "No Description Available"
+                def clean_text(text):
+                    return ''.join(c for c in text if ord(c) < 128)  # Remove non-ASCII characters
+
+                task_name = clean_text(row['Task Name'])
+                description = clean_text(row['Description'])
 
                 # ✅ Handle encoding issues
                 task_name = ''.join(c for c in task_name if ord(c) < 128)
