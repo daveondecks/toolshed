@@ -3,6 +3,7 @@ import pandas as pd
 import io
 import xlsxwriter
 from datetime import date
+import matplotlib.pyplot as plt
 
 # Set wide layout
 st.set_page_config(page_title="PDCA Toolshed", layout="wide")
@@ -77,7 +78,7 @@ pdca_colors = {
 
 # ✅ Main Tabs
 st.title("🧰 One Team Continuous Improvement Toolshed")
-tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan", "Analytics"])
 
 # === Toolshed Tab ===
 with tab1:
@@ -289,3 +290,34 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
+    tab5 = st.tabs(["Analytics Dashboard"])[0]  # Add a new tab for Analytics
+ # === Analytics Tab ===
+with tab5:
+    st.subheader("📊 PDCA Analytics Dashboard")
+    st.write("Analyze tool usage trends and find high-impact tools based on past selections.")
+
+    
+    # ✅ Count tool usage
+    tool_usage = {}
+    for phase, tools in st.session_state.selected_tools.items():
+        for tool in tools:
+            tool_usage[tool] = tool_usage.get(tool, 0) + 1
+
+    # ✅ Convert to DataFrame
+    tool_usage_df = pd.DataFrame(tool_usage.items(), columns=["Tool Name", "Usage Count"]).sort_values(by="Usage Count", ascending=False)
+
+    # ✅ Display tool usage
+    st.markdown("### 📈 Most Used PDCA Tools")
+    st.dataframe(tool_usage_df, use_container_width=True)  # ✅ Make it full width
+
+    # ✅ Plot a Bar Chart using Matplotlib
+    if not tool_usage_df.empty:
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.barh(tool_usage_df["Tool Name"], tool_usage_df["Usage Count"], color="skyblue")
+        ax.set_xlabel("Usage Count")
+        ax.set_ylabel("Tool Name")
+        ax.set_title("📊 Most Used PDCA Tools")
+        ax.invert_yaxis()  # ✅ Ensure the most used tool appears at the top
+        st.pyplot(fig)
+    else:
+        st.warning("No tools have been selected yet. Choose some tools in the sidebar to see analytics.")
