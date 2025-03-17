@@ -57,6 +57,14 @@ st.title("🧰 One Team Continuous Improvement Toolshed")
 tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
 
 # === Toolshed Tab ===
+
+# Define PDCA colors (matching the screenshot)
+pdca_colors = {
+    "Plan": "#FFD700",  # Gold Yellow
+    "Do": "#32CD32",    # Green
+    "Check": "#1E90FF", # Blue
+    "Act": "#FF4500"    # Red
+}
 with tab1:
     st.subheader("Toolshed")
     st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
