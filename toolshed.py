@@ -163,37 +163,73 @@ for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
     with exp_cols[i].expander(f"{phase}", expanded=False):
         st.write(descriptions[phase])
     
-    # Display four toolbox containers (one per PDCA phase) with curved tops and slots for selected tools
-    toolbox_cols = st.columns(4)
-    phase_names = ["Plan", "Do", "Check", "Act"]
-    selections = [selected_plan, selected_do, selected_check, selected_act]
-    for idx, phase in enumerate(phase_names):
+ # Define PDCA colors for toolboxes
+# Ensure PDCA colors are defined before this section
+pdca_colors = {
+    "Plan": "#FFD700",  # Gold
+    "Do": "#32CD32",    # Lime Green
+    "Check": "#1E90FF", # Dodger Blue
+    "Act": "#FF4500"    # Orange Red
+}
+
+# Make sure selected tools exist (replace with actual selection logic)
+selected_plan = ["Tool A", "Tool B"]  # Example data (replace with dynamic selection)
+selected_do = ["Tool C"]  # Example data
+selected_check = []  # Example: No tools selected
+selected_act = ["Tool D", "Tool E"]  # Example data
+
+# Store selections in a list
+selections = [selected_plan, selected_do, selected_check, selected_act]
+
+# ✅ Create a single row with 4 columns for toolboxes
+toolbox_cols = st.columns(4)
+phase_names = ["Plan", "Do", "Check", "Act"]
+
+for idx, phase in enumerate(phase_names):
+    with toolbox_cols[idx]:
         tools = selections[idx]
-        # Construct HTML for the toolbox with a curved top border
-        toolbox_html = f"""
+        box_color = pdca_colors[phase]  # Get the color for this phase
+
+        # Render the PDCA-colored toolbox header
+        st.markdown(f"""
         <div style="
-            background-color: #F1F1F1;
-            border: 2px solid #555;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            padding: 10px;
-            min-height: 120px;
-        ">
-        """
-        if tools:
-            # List each selected tool as a "slot" in the toolbox
-            toolbox_html += '<ul style="list-style-type: none; margin: 0; padding-left: 8px;">'
-            for j, tool in enumerate(tools):
-                # Add a bottom border for each tool slot except the last one to visually separate slots
-                border_style = "border-bottom: 1px solid #ccc;" if j < len(tools) - 1 else ""
-                toolbox_html += f'<li style="padding: 4px; {border_style}">{tool}</li>'
-            toolbox_html += "</ul>"
+            background-color: {box_color}; 
+            padding: 15px; 
+            border-radius: 10px; 
+            text-align: center; 
+            color: white; 
+            font-weight: bold;">
+            {phase} Toolbox
+        </div>
+        """, unsafe_allow_html=True)
+
+        # ✅ Display tools (or "No tools selected" message)
+        if not tools:
+            st.markdown(f"""
+            <div style="
+                background-color: #F1F1F1; 
+                padding: 10px; 
+                border-radius: 5px;
+                text-align: center;
+                margin-top: 5px;
+                color: black;">
+                No tools selected
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            # If no tool selected for this phase, indicate an empty toolbox
-            toolbox_html += '<em>No tools selected</em>'
-        toolbox_html += "</div>"
-        # Render the toolbox HTML in the respective column
-        toolbox_cols[idx].markdown(toolbox_html, unsafe_allow_html=True)
+            for tool in tools:
+                st.markdown(f"""
+                <div style="
+                    background-color: white; 
+                    padding: 10px; 
+                    border: 2px solid {box_color}; 
+                    border-radius: 5px;
+                    text-align: center;
+                    margin-top: 5px;
+                    color: black;">
+                    ✅ {tool}
+                </div>
+                """, unsafe_allow_html=True)
 
 # === Tool Dictionary Tab ===
 with tab2:
