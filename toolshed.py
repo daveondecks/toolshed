@@ -161,15 +161,14 @@ with tab2:
     if 'More Info' in filtered_data.columns:
         filtered_data['Tool Name'] = filtered_data.apply(
             lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>"
-            if pd.notna(row['More Info']) and row['More Info'].startswith("http") else row['Tool Name'], axis=1
+            if pd.notna(row['More Info']) and str(row['More Info']).startswith("http") else row['Tool Name'], axis=1
         )
 
     # ✅ Select and rename columns for display
     dict_display = filtered_data[['PDCA Category', 'Tool Name', 'Description']].copy()
     dict_display.rename(columns={'PDCA Category': 'Phase'}, inplace=True)
 
-    # ✅ Apply Custom CSS for Centered Headers
-    table_html = dict_display.to_html(escape=False, index=False)
+    # ✅ Apply Custom CSS for Centered Headers & Full Width Table
     styled_html = f"""
     <style>
         table {{
@@ -185,15 +184,18 @@ with tab2:
             padding: 8px;
             border-bottom: 1px solid #ddd;
         }}
+        tr:nth-child(even) {{
+            background-color: #f9f9f9; /* Alternate Row Colors */
+        }}
     </style>
-    {table_html}
+    {dict_display.to_html(escape=False, index=False)}
     """
 
     # ✅ Display the styled table
     if dict_display.empty:
         st.warning("No tools found. Try a different search term.")
     else:
-        st.markdown(styled_html, unsafe_allow_html=True)
+        st.write(styled_html, unsafe_allow_html=True)
 
 
 # === Video Library Tab ===
