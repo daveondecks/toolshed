@@ -143,67 +143,37 @@ with tab1:
 
 # === Tool Dictionary Tab ===
 with tab2:
-    st.subheader("📚 Tool Dictionary")
-    st.write("Browse tools and click on a tool name to learn more.")
-
-    # ✅ Search Box
+    st.subheader("Tool Dictionary")
+    
+    # Search box
     query = st.text_input("🔍 Search tools:", "")
 
-    # ✅ Filter tools based on search query
+    # ✅ Case-insensitive filtering
     if query:
-        mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | \
-               tool_data['Description'].str.contains(query, case=False, na=False)
+        mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | tool_data['Description'].str.contains(query, case=False, na=False)
         filtered_data = tool_data[mask].copy()
     else:
         filtered_data = tool_data.copy()
 
-    # ✅ Convert 'Tool Name' to clickable links if 'More Info' is available
+    # ✅ Convert 'Tool Name' into clickable links
     if 'More Info' in filtered_data.columns:
         filtered_data['Tool Name'] = filtered_data.apply(
-            lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>"
-            if pd.notna(row['More Info']) and str(row['More Info']).startswith("http") else row['Tool Name'], axis=1
+            lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>" 
+                        if pd.notna(row['More Info']) and str(row['More Info']).strip() != "" 
+                        else row['Tool Name'],
+            axis=1
         )
 
-    # ✅ Select and rename columns for display
+    # ✅ Display table with same width as the search box
     dict_display = filtered_data[['PDCA Category', 'Tool Name', 'Description']].copy()
     dict_display.rename(columns={'PDCA Category': 'Phase'}, inplace=True)
 
-    # ✅ Apply Custom CSS for Centered Headers & Full Width Table
-    styled_html = f"""
-    <style>
-        table {{
-            width: 100%;  /* Full width */
-            border-collapse: collapse;
-        }}
-        th {{
-            background-color: #f4f4f4;
-            text-align: center;  /* Center Headers */
-            padding: 10px;
-        }}
-        td {{
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-        }}
-        tr:nth-child(even) {{
-            background-color: #f9f9f9; /* Alternate Row Colors */
-        }}
-        a {{
-            color: #1f77b4; /* Hyperlink Color */
-            text-decoration: none;
-        }}
-        a:hover {{
-            text-decoration: underline;
-        }}
-    </style>
-    {dict_display.to_html(escape=False, index=False)}
-    """
-
-    # ✅ Display the styled table
     if dict_display.empty:
-        st.warning("No tools found. Try a different search term.")
+        st.warning("⚠️ No tools found. Try a different search term.")
     else:
-        st.write(styled_html, unsafe_allow_html=True)
-        
+        st.container()  # Wrap table inside a container
+        st.dataframe(dict_display, use_container_width=True)
+               
 # === Video Library Tab ===
 with tab3:
     st.subheader("🎥 Video Library - Work in Progress 🚧")
