@@ -163,8 +163,11 @@ for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
     with exp_cols[i].expander(f"{phase}", expanded=False):
         st.write(descriptions[phase])
     
- # Define PDCA colors for toolboxes
-# Ensure PDCA colors are defined before this section
+import streamlit as st
+
+import streamlit as st
+
+# Define PDCA colors for toolboxes
 pdca_colors = {
     "Plan": "#FFD700",  # Gold
     "Do": "#32CD32",    # Lime Green
@@ -172,25 +175,42 @@ pdca_colors = {
     "Act": "#FF4500"    # Orange Red
 }
 
-# Make sure selected tools exist (replace with actual selection logic)
-selected_plan = ["Tool A", "Tool B"]  # Example data (replace with dynamic selection)
-selected_do = ["Tool C"]  # Example data
-selected_check = []  # Example: No tools selected
-selected_act = ["Tool D", "Tool E"]  # Example data
+# ✅ Ensure session state is initialized properly
+if "selected_tools" not in st.session_state:
+    st.session_state.selected_tools = {
+        "Plan": [],
+        "Do": [],
+        "Check": [],
+        "Act": []
+    }
 
-# Store selections in a list
-selections = [selected_plan, selected_do, selected_check, selected_act]
+# ✅ Sidebar for selecting tools (using a temporary variable to avoid direct state modification)
+st.sidebar.header("Select Tools for PDCA Phases")
+for phase in ["Plan", "Do", "Check", "Act"]:
+    selected_temp = st.sidebar.multiselect(
+        f"{phase} Tools:",
+        options=["Five Ys", "MoSCoW", "Six S’s", "Tool A", "Tool B", "Tool C", "Tool D", "Tool E"],
+        default=st.session_state.selected_tools[phase]  # Keeps previous selections
+    )
+    
+    # ✅ Only update session state if selection changes (prevents unnecessary reruns)
+    if selected_temp != st.session_state.selected_tools[phase]:
+        st.session_state.selected_tools[phase] = selected_temp
+        st.rerun()  # Force Streamlit to refresh UI immediately
 
-# ✅ Create a single row with 4 columns for toolboxes
+# ✅ Display the PDCA toolboxes in the main frame
+st.markdown("### Toolshed")
+st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
+
+# ✅ Create PDCA toolbox columns
 toolbox_cols = st.columns(4)
-phase_names = ["Plan", "Do", "Check", "Act"]
 
-for idx, phase in enumerate(phase_names):
+for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
     with toolbox_cols[idx]:
-        tools = selections[idx]
-        box_color = pdca_colors[phase]  # Get the color for this phase
+        tools = st.session_state.selected_tools[phase]
+        box_color = pdca_colors[phase]  # Get color for this phase
 
-        # Render the PDCA-colored toolbox header
+        # ✅ Render the PDCA-colored toolbox header
         st.markdown(f"""
         <div style="
             background-color: {box_color}; 
