@@ -173,7 +173,7 @@ pdca_colors = {
     "Act": "#FF4500"    # Orange Red
 }
 
-# ✅ Ensure session state is initialized properly
+# ✅ Ensure session state is initialized properly (only once)
 if "selected_tools" not in st.session_state:
     st.session_state.selected_tools = {
         "Plan": [],
@@ -182,16 +182,20 @@ if "selected_tools" not in st.session_state:
         "Act": []
     }
 
-# ✅ Sidebar for selecting tools (using a temporary variable)
+# ✅ Sidebar for selecting tools (ensuring no duplication)
 st.sidebar.header("Select Tools for PDCA Phases")
 
 selection_changed = False  # Flag to track if selection was updated
 
 for phase in ["Plan", "Do", "Check", "Act"]:
+    # Prevents sidebar duplication
+    if phase not in st.session_state.selected_tools:
+        st.session_state.selected_tools[phase] = []
+
     selected_temp = st.sidebar.multiselect(
         f"{phase} Tools:",
-        options=["Five Ys", "MoSCoW", "Six S’s", "VSM", "Tool A", "Tool B", "Tool C", "Tool D", "Tool E"],
-        default=st.session_state.selected_tools.get(phase, [])
+        options=["Five Ys", "MoSCoW", "Six S’s", "VSM", "Pareto Chart", "Kaizen", "Heat Map", "Check sheet", "Quality", "Comms", "Lessons"],
+        default=st.session_state.selected_tools[phase]
     )
 
     # ✅ Only update session state if selection changes
