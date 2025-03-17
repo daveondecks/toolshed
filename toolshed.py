@@ -219,7 +219,7 @@ if FPDF is not None:  # ✅ Check if FPDF was successfully imported
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)  # Enable automatic page breaks
     pdf.add_page()
-
+    
     # ✅ Title Section
     pdf.set_font("Arial", 'B', 16)
     pdf.cell(0, 10, f"Project Plan - {st.session_state.get('project_name', 'Untitled')}", ln=1, align='C')
@@ -227,8 +227,8 @@ if FPDF is not None:  # ✅ Check if FPDF was successfully imported
     pdf.cell(0, 10, f"Owner: {st.session_state.get('project_owner', 'N/A')}    Created: {st.session_state.get('created_date', 'N/A')}", ln=1, align='C')
     pdf.ln(10)
 
-    # ✅ Check if project_plan_df is defined and not empty
-    if 'project_plan_df' not in locals() or project_plan_df.empty:
+    # ✅ Check if there are tasks, else display a message
+    if project_plan_df.empty:
         pdf.set_font("Arial", 'I', 12)
         pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
     else:
@@ -237,24 +237,23 @@ if FPDF is not None:  # ✅ Check if FPDF was successfully imported
             pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
             pdf.set_font("Arial", '', 12)
 
-            # ✅ Handle Empty or NaN Task Names and Descriptions
-            task_name = str(row['Task Name']) if pd.notna(row['Task Name']) else "Unnamed Task"
-            description = str(row['Description']) if pd.notna(row['Description']) else "No Description Available"
+            # ✅ Remove unsupported characters
+            task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
+            description = row['Description'] if row['Description'] else "No Description Available"
 
-            # ✅ Handle Encoding Issues
-            try:
-                task_name = task_name.encode('latin-1', 'ignore').decode('latin-1')
-                description = description.encode('latin-1', 'ignore').decode('latin-1')
-            except:
-                task_name, description = "Encoding Error", "Encoding Error"
+            # ✅ Remove emojis and unsupported symbols
+            def clean_text(text):
+                return ''.join(c for c in text if ord(c) < 128)  # Keep only ASCII characters
 
-            # ✅ Format Task Entries Clearly
-            pdf.multi_cell(0, 6, f"🔹 {task_name}: {description}", align='L')
+            task_name = clean_text(task_name)
+            description = clean_text(description)
+
+            pdf.cell(0, 6, f"{task_name} - {description}", ln=1)
             pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
             pdf.ln(4)
 
-    # ✅ Generate and Allow PDF Download
-    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    # ✅ Generate and Allow PDF Download (Using UTF-8)
+    pdf_bytes = pdf.output(dest='S').encode('utf-8')
     dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
 
 else:
