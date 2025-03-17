@@ -191,13 +191,14 @@ with tab3:
         """,
         unsafe_allow_html=True
     )
-    # === Project Plan Tab ===
+    
+# === Project Plan Tab ===
 with tab4:
     st.subheader("Project Plan")
 
     # ✅ Retrieve project details from session state
-    project_name = st.session_state["project_name"]
-    project_owner = st.session_state["project_owner"]
+    project_name = st.session_state.get("project_name", "Untitled")
+    project_owner = st.session_state.get("project_owner", "N/A")
     created_date = st.session_state.get("created_date", date.today().strftime("%d-%m-%Y"))
 
     # ✅ Display Project Details
@@ -220,90 +221,67 @@ with tab4:
     # ✅ Display project plan table
     st.dataframe(project_plan_df, use_container_width=True)
 
-  
-
-    # ✅ Generate Excel File
-    excel_output = io.BytesIO()
-    with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
-        project_plan_df.to_excel(writer, sheet_name="Project Plan", index=False)
-
-    # ✅ Retrieve Excel Data for Download
-    excel_data = excel_output.getvalue()
-
-    # ✅ Add Excel Download Button
-    dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-
     # ✅ Download buttons
     st.markdown("**Download Project Plan:**")
-    dcol1, dcol2, dcol3, dcol4 = st.columns(4)
+    dcol1, dcol2, dcol3, dcol4 = st.columns(4)  # Ensure `dcol2` is defined here
 
     # ✅ CSV Download
     csv_data = project_plan_df.to_csv(index=False, encoding='utf-8-sig')
     dcol1.download_button("Download CSV", data=csv_data, file_name="Project_Plan.csv", mime="text/csv")
 
-    # ✅ Excel Download (NEW)
-    import io
-    import xlsxwriter
-
-    # ✅ Generate Excel File
-    excel_output = io.BytesIO()
-    with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
-        project_plan_df.to_excel(writer, sheet_name="Project Plan", index=False)
-
-    # ✅ Retrieve Excel Data for Download
-    excel_data = excel_output.getvalue()
-
-    # ✅ Add Excel Download Button
-    dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    # ✅ Excel Download using `xlsxwriter`
+    try:
+        excel_output = io.BytesIO()
+        with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
+            project_plan_df.to_excel(writer, index=False, sheet_name="Project Plan")
+        excel_data = excel_output.getvalue()
+        dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    except Exception as e:
+        dcol2.write("Excel export not available")
 
     # ✅ TXT Download
     text_data = project_plan_df.to_csv(index=False, sep='\t')
     dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
-try:
-    from fpdf import FPDF
-except ImportError:
-    FPDF = None
 
-if FPDF is not None:
-    pdf = FPDF()
-    pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_page()
+    # ✅ PDF Download (Ensure it's working properly)
+    try:
+        from fpdf import FPDF
+    except ImportError:
+        FPDF = None
 
-    # ✅ Title Section
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, f"Project Plan - {st.session_state.get('project_name', 'Untitled')}", ln=1, align='C')
-    pdf.set_font("Arial", '', 12)
-    pdf.cell(0, 10, f"Owner: {st.session_state.get('project_owner', 'N/A')}    Created: {st.session_state.get('created_date', 'N/A')}", ln=1, align='C')
-    pdf.ln(10)
+    if FPDF:
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+        
+        # ✅ Title Section
+        pdf.set_font("Arial", 'B', 16)
+        pdf.cell(0, 10, f"Project Plan - {project_name}", ln=1, align='C')
+        pdf.set_font("Arial", '', 12)
+        pdf.cell(0, 10, f"Owner: {project_owner}    Created: {created_date}", ln=1, align='C')
+        pdf.ln(10)
 
-    # ✅ Write tasks to PDF
-    if not project_plan_df.empty:
-        for _, row in project_plan_df.iterrows():
-            pdf.set_font("Arial", 'B', 14)
-            pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
-            pdf.set_font("Arial", '', 12)
+        if not project_plan_df.empty:
+            for _, row in project_plan_df.iterrows():
+                pdf.set_font("Arial", 'B', 14)
+                pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
+                pdf.set_font("Arial", '', 12)
 
-            # ✅ Handle encoding issues
-            task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
-            description = row['Description'] if row['Description'] else "No Description Available"
+                task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
+                description = row['Description'] if row['Description'] else "No Description Available"
 
-            def clean_text(text):
-                return ''.join(c for c in text if ord(c) < 128)  # Keep only ASCII characters
+                # ✅ Handle encoding issues
+                task_name = ''.join(c for c in task_name if ord(c) < 128)
+                description = ''.join(c for c in description if ord(c) < 128)
 
-            task_name = clean_text(task_name)
-            description = clean_text(description)
+                pdf.cell(0, 6, f"🔹 {task_name} - {description}", ln=1)
+                pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
+                pdf.ln(4)
+        else:
+            pdf.set_font("Arial", 'I', 12)
+            pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
 
-            pdf.cell(0, 6, f"{task_name} - {description}", ln=1)
-            pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
-            pdf.ln(4)
-
+        pdf_bytes = pdf.output(dest='S').encode('latin-1')
+        dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
     else:
-        pdf.set_font("Arial", 'I', 12)
-        pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
-
-    # ✅ Generate PDF Download Button
-    pdf_bytes = pdf.output(dest='S').encode('latin-1')
-    dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
-
-else:
-    dcol4.write("⚠️ PDF export not available (FPDF not installed)")
+        dcol4.write("PDF export not available")
