@@ -333,21 +333,22 @@ with tab5:
         plt.gca().invert_yaxis()  # Ensure highest values are at the top
         st.pyplot(fig)
 
-    # ✅ Ensure no NaN values in `phase_usage`
-    phase_usage = {k: 0 if np.isnan(v) else v for k, v in phase_usage.items()}
+        # ✅ Plot PDCA Phase Distribution (Pie Chart)
+        st.markdown("### 📌 PDCA Phase Distribution")
 
-    # ✅ Plot PDCA Phase Distribution (Pie Chart)
-    st.markdown("### 📌 PDCA Phase Distribution")
-    fig1, ax1 = plt.subplots()
-    ax1.pie(
-        phase_usage.values(),
-        labels=phase_usage.keys(),
-        autopct='%1.1f%%',
-        colors=["gold", "limegreen", "dodgerblue", "orangered"],
-        startangle=140
-    )
-    ax1.axis("equal")  # Equal aspect ratio ensures a circular pie chart
-    st.pyplot(fig1)
+        # Fix NaN issue before plotting
+        import numpy as np
+        phase_usage = {phase: len(tools) if len(tools) > 0 else 0 for phase, tools in st.session_state.selected_tools.items()}
+        phase_usage = {k: 0 if np.isnan(v) else v for k, v in phase_usage.items()}
+
+        fig1, ax1 = plt.subplots()
+        ax1.pie(
+            phase_usage.values(),
+            labels=phase_usage.keys(),
+            autopct='%1.1f%%',
+            colors=["gold", "limegreen", "dodgerblue", "orangered"]
+        )
+        st.pyplot(fig1)
 
     # ✅ Generate Tool Pairing Heatmap (If enough data)
     if tool_combinations:
