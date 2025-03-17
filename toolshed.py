@@ -93,12 +93,13 @@ if "selected_tools" not in st.session_state:
     }
 
 # ✅ Retrieve selected tools from session state
-selected_tools = st.session_state.selected_tools  # Now correctly assigned
+selected_tools = st.session_state.selected_tools  
 
 # ✅ Create PDCA toolboxes with colors
 toolbox_cols = st.columns(4)  # Ensure correct indentation
+
 for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-    with toolbox_cols[idx]:  # This line should be indented correctly
+    with toolbox_cols[idx]:  # Ensure this line is indented correctly
         tools = selected_tools[phase]
         box_color = pdca_colors[phase]
 
@@ -115,35 +116,35 @@ for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
         </div>
         """, unsafe_allow_html=True)
 
-            # ✅ Display selected tools
-            if not tools:
-                st.markdown(f"""
-                <div style="
-                    background-color: #F1F1F1; 
-                    padding: 10px; 
-                    border-radius: 5px;
-                    text-align: center;
-                    margin-top: 5px;
-                    color: black;">
-                    No tools selected
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                toolbox_html = f"""
-                <div style="
-                    background-color: white;
-                    border: 2px solid {box_color};
-                    border-radius: 10px;
-                    padding: 10px;
-                    margin-top: 5px;
-                ">
-                <ul style="list-style-type: none; padding: 0;">
-                """
-                for tool in tools:
-                    toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
-                toolbox_html += "</ul></div>"
+        # ✅ Display selected tools
+        if not tools:
+            st.markdown(f"""
+            <div style="
+                background-color: #F1F1F1; 
+                padding: 10px; 
+                border-radius: 5px;
+                text-align: center;
+                margin-top: 5px;
+                color: black;">
+                No tools selected
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            toolbox_html = f"""
+            <div style="
+                background-color: white;
+                border: 2px solid {box_color};
+                border-radius: 10px;
+                padding: 10px;
+                margin-top: 5px;
+            ">
+            <ul style="list-style-type: none; padding: 0;">
+            """
+            for tool in tools:
+                toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
+            toolbox_html += "</ul></div>"
 
-                st.markdown(toolbox_html, unsafe_allow_html=True)
+            st.markdown(toolbox_html, unsafe_allow_html=True)
 
 # === Tool Dictionary Tab ===
 with tab2:
