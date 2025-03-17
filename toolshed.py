@@ -157,7 +157,7 @@ with tab2:
     else:
         filtered_data = tool_data.copy()
 
-    # ✅ Convert 'Tool Name' to clickable link if 'More Info' is available
+    # ✅ Convert 'Tool Name' to clickable links if 'More Info' is available
     if 'More Info' in filtered_data.columns:
         filtered_data['Tool Name'] = filtered_data.apply(
             lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>"
@@ -187,6 +187,13 @@ with tab2:
         tr:nth-child(even) {{
             background-color: #f9f9f9; /* Alternate Row Colors */
         }}
+        a {{
+            color: #1f77b4; /* Hyperlink Color */
+            text-decoration: none;
+        }}
+        a:hover {{
+            text-decoration: underline;
+        }}
     </style>
     {dict_display.to_html(escape=False, index=False)}
     """
@@ -196,8 +203,7 @@ with tab2:
         st.warning("No tools found. Try a different search term.")
     else:
         st.write(styled_html, unsafe_allow_html=True)
-
-
+        
 # === Video Library Tab ===
 with tab3:
     st.subheader("🎥 Video Library - Work in Progress 🚧")
