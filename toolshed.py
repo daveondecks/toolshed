@@ -298,34 +298,48 @@ else:
 with tab5:
     st.subheader("📊 PDCA Analytics Dashboard")
     st.write("Analyze tool usage trends and find high-impact tools based on past selections.")
-    
-    # ✅ Count tool usage per phase
-    phase_usage = {"Plan": 0, "Do": 0, "Check": 0, "Act": 0}
+
+    # ✅ Count tool usage
     tool_usage = {}
-    tool_combinations = []
-    
+    phase_usage = {"Plan": 0, "Do": 0, "Check": 0, "Act": 0}
+
     for phase, tools in st.session_state.selected_tools.items():
-        phase_usage[phase] += len(tools)
         for tool in tools:
             tool_usage[tool] = tool_usage.get(tool, 0) + 1
-        
-        # ✅ Collect tool pairing data for heatmap
-        for i in range(len(tools)):
-            for j in range(i + 1, len(tools)):
-                tool_combinations.append((tools[i], tools[j]))
-    
+            phase_usage[phase] += 1  # Count how many tools are in each phase
+
     # ✅ Convert tool usage to DataFrame
     tool_usage_df = pd.DataFrame(tool_usage.items(), columns=["Tool Name", "Usage Count"]).sort_values(by="Usage Count", ascending=False)
-    
-    # ✅ Display tool usage table
+
+    # ✅ Ensure phase usage has valid values (no NaN)
+    phase_usage = {k: int(v) if not pd.isna(v) else 0 for k, v in phase_usage.items()}
+
+    # ✅ Display tool usage
     st.markdown("### 📈 Most Used PDCA Tools")
-    st.dataframe(tool_usage_df, use_container_width=True)
-    
-    # ✅ Plot PDCA Phase Distribution (Pie Chart)
+    if tool_usage_df.empty:
+        st.write("No tools selected yet.")
+    else:
+        st.dataframe(tool_usage_df, use_container_width=True)
+
+        # ✅ Plot a Bar Chart
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.barh(tool_usage_df["Tool Name"], tool_usage_df["Usage Count"], color="skyblue")
+        ax.set_xlabel("Usage Count")
+        ax.set_ylabel("Tool Name")
+        ax.set_title("📊 Most Used PDCA Tools")
+        st.pyplot(fig)
+
+    # ✅ Plot PDCA Phase Distribution (Pie Chart) - FIXED
     st.markdown("### 📌 PDCA Phase Distribution")
     fig1, ax1 = plt.subplots()
-    ax1.pie(phase_usage.values(), labels=phase_usage.keys(), autopct='%1.1f%%', colors=["gold", "limegreen", "dodgerblue", "orangered"], startangle=90)
-    ax1.axis("equal")  # Equal aspect ratio ensures the pie chart is circular.
+    ax1.pie(
+        phase_usage.values(),
+        labels=phase_usage.keys(),
+        autopct='%1.1f%%',
+        startangle=90,
+        colors=["#FFD700", "#32CD32", "#1E90FF", "#FF4500"]
+    )
+    ax1.axis("equal")  # Equal aspect ratio ensures the pie chart is circular
     st.pyplot(fig1)
     
     # ✅ Plot Most Used PDCA Tools (Bar Chart)
