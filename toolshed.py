@@ -56,194 +56,56 @@ st.title("🧰 One Team Continuous Improvement Toolshed")
 # Create top-level tabs
 tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
 
-import streamlit as st
-
-# Define PDCA colors for toolboxes
-pdca_colors = {
-    "Plan": "#FFD700",  # Gold
-    "Do": "#32CD32",    # Lime Green
-    "Check": "#1E90FF", # Dodger Blue
-    "Act": "#FF4500"    # Orange Red
-}
-
-# ✅ Ensure session state is initialized properly
-if "selected_tools" not in st.session_state:
-    st.session_state.selected_tools = {
-        "Plan": [],
-        "Do": [],
-        "Check": [],
-        "Act": []
+# === Toolshed Tab ===
+with tab1:
+    st.subheader("Toolshed")
+    st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
+    
+    # PDCA step descriptions (to show in expanders above each toolbox column)
+    descriptions = {
+        "Plan":  "Plan: Define objectives and processes needed to deliver results.",
+        "Do":    "Do: Implement the plan and execute the process on a small scale.",
+        "Check": "Check: Monitor and evaluate the results against the expected outcomes.",
+        "Act":   "Act: Apply learning to adjust the process, and standardize improvements."
     }
-
-# ✅ Sidebar for selecting tools
-st.sidebar.header("Select Tools for PDCA Phases")
-for phase in ["Plan", "Do", "Check", "Act"]:
-    selected_temp = st.sidebar.multiselect(
-        f"{phase} Tools:",
-        options=["Five Ys", "MoSCoW", "Six S’s", "VSM", "Pareto Chart", "Kaizen", "Heat Map", "Check sheet", "Quality", "Comms", "Lessons"],
-        default=st.session_state.selected_tools.get(phase, [])  # Ensure safe retrieval
-    )
-
-    # ✅ Only update session state if selection changes
-    if selected_temp != st.session_state.selected_tools[phase]:
-        st.session_state.selected_tools[phase] = selected_temp
-
-# ✅ Main Toolshed Section
-st.subheader("Toolshed")
-st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
-
-# ✅ PDCA Detailed Descriptions (Expander Menus)
-descriptions = {
-    "Plan": """📌 **Description:**  
-The **Plan** phase is about **identifying a problem, understanding the root cause, and developing a solution.** 
-This is where you analyze the current state, set objectives, and plan improvements.
-
-🛠 **Typical Tools:**
-- 5 Whys Analysis (to identify root cause)
-- Ishikawa (Fishbone) Diagram (cause & effect analysis)
-- Process Mapping (to visualize the workflow)
-- SWOT Analysis (to evaluate strengths, weaknesses, opportunities & threats)
-- SMART Goal Setting (to create clear objectives)
-- Risk Assessment Matrix (to evaluate potential risks)
-
-✅ **Best Practices:**
-- Clearly define the problem before jumping to solutions.
-- Engage key stakeholders early in the process.
-- Use data and facts, not opinions, to guide planning.
-- Break down complex issues into manageable parts.
-
-⚠️ **Watch-Outs (Common Mistakes):**
-- Jumping to conclusions without root cause analysis.
-- Setting vague or unrealistic goals.
-- Not involving the right people in the planning process.
-- Overcomplicating the plan with too much documentation instead of actionable steps.
-""",
-
-    "Do": """📌 **Description:**  
-The **Do** phase involves **implementing the plan on a small scale** (pilot test) while monitoring progress.
-
-🛠 **Typical Tools:**
-- Pilot Testing (small-scale trial before full rollout)
-- Standard Operating Procedures (SOPs) to ensure consistency
-- Training & Work Instructions to prepare employees
-- Gantt Charts to track implementation timelines
-- Resource Allocation Plans for materials, time, and personnel
-
-✅ **Best Practices:**
-- Start with a small test before full rollout.
-- Ensure team buy-in before implementing changes.
-- Provide clear training and instructions.
-- Monitor and collect data throughout the process.
-
-⚠️ **Watch-Outs (Common Mistakes):**
-- Failing to provide proper training to employees.
-- Not having a backup plan in case of failure.
-- Implementing too many changes at once.
-- Ignoring feedback from frontline workers.
-""",
-
-    "Check": """📌 **Description:**  
-The **Check** phase focuses on **analyzing the results** of the pilot test to determine effectiveness.
-
-🛠 **Typical Tools:**
-- Before & After Analysis to measure impact
-- Key Performance Indicators (KPIs) to track progress
-- Control Charts to monitor process variation
-- Pareto Analysis to identify the biggest contributors to problems
-- Employee Feedback Surveys to gauge user experience
-
-✅ **Best Practices:**
-- Compare actual results to planned objectives.
-- Involve the team in reviewing results.
-- Use both qualitative & quantitative data for analysis.
-- Identify unintended consequences of the change.
-
-⚠️ **Watch-Outs (Common Mistakes):**
-- Not having measurable KPIs before testing.
-- Only looking at short-term results.
-- Ignoring feedback from frontline employees.
-- Assuming no further improvements are needed if the results look good.
-""",
-
-    "Act": """📌 **Description:**  
-The **Act** phase determines whether the change should be **fully implemented, modified, or abandoned.**
-
-🛠 **Typical Tools:**
-- Standard Operating Procedures (SOPs) to ensure repeatability
-- Lessons Learned Reports to document findings
-- Root Cause Verification to ensure issues are fully resolved
-- Training & Change Management Plans to ensure sustainability
-- PDCA Cycle Continuation for ongoing improvement
-
-✅ **Best Practices:**
-- Standardize successful changes by integrating them into SOPs.
-- Communicate the changes across teams and departments.
-- Monitor the process over time to ensure consistency.
-- Celebrate success and recognize contributions.
-
-⚠️ **Watch-Outs (Common Mistakes):**
-- Failing to document changes in work procedures.
-- Not ensuring leadership support for full rollout.
-- Ignoring sustainability—changes should be maintained long-term.
-- Assuming the process is "fixed"—PDCA should continue as an ongoing cycle.
-"""
-}
-
-# ✅ Display PDCA Descriptions
-exp_cols = st.columns(4)
-for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-    with exp_cols[i].expander(f"{phase}", expanded=False):
-        st.markdown(descriptions[phase])
-
-# ✅ Create Toolboxes for Selected Tools
-toolbox_cols = st.columns(4)
-for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-    with toolbox_cols[idx]:
-        tools = st.session_state.selected_tools[phase]  # Fetch selected tools
-        box_color = pdca_colors[phase]  # Get phase color
-
-        # ✅ Render PDCA-colored Toolbox Header
-        st.markdown(f"""
+    # Display four expanders side by side, one for each PDCA phase description
+    exp_cols = st.columns(4)
+    for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
+        with exp_cols[i].expander(f"{phase}", expanded=False):
+            st.write(descriptions[phase])
+    
+    # Display four toolbox containers (one per PDCA phase) with curved tops and slots for selected tools
+    toolbox_cols = st.columns(4)
+    phase_names = ["Plan", "Do", "Check", "Act"]
+    selections = [selected_plan, selected_do, selected_check, selected_act]
+    for idx, phase in enumerate(phase_names):
+        tools = selections[idx]
+        # Construct HTML for the toolbox with a curved top border
+        toolbox_html = f"""
         <div style="
-            background-color: {box_color}; 
-            padding: 15px; 
-            border-radius: 10px; 
-            text-align: center; 
-            color: white; 
-            font-weight: bold;">
-            {phase} Toolbox
-        </div>
-        """, unsafe_allow_html=True)
-
-        # ✅ Display selected tools or "No tools selected"
-        if not tools:
-            st.markdown(f"""
-            <div style="
-                background-color: #F1F1F1; 
-                padding: 10px; 
-                border-radius: 5px;
-                text-align: center;
-                margin-top: 5px;
-                color: black;">
-                No tools selected
-            </div>
-            """, unsafe_allow_html=True)
+            background-color: #F1F1F1;
+            border: 2px solid #555;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            padding: 10px;
+            min-height: 120px;
+        ">
+        """
+        if tools:
+            # List each selected tool as a "slot" in the toolbox
+            toolbox_html += '<ul style="list-style-type: none; margin: 0; padding-left: 8px;">'
+            for j, tool in enumerate(tools):
+                # Add a bottom border for each tool slot except the last one to visually separate slots
+                border_style = "border-bottom: 1px solid #ccc;" if j < len(tools) - 1 else ""
+                toolbox_html += f'<li style="padding: 4px; {border_style}">{tool}</li>'
+            toolbox_html += "</ul>"
         else:
-            toolbox_html = f"""
-            <div style="
-                background-color: white;
-                border: 2px solid {box_color};
-                border-radius: 10px;
-                padding: 10px;
-                margin-top: 5px;
-            ">
-            <ul style="list-style-type: none; padding: 0;">
-            """
-            for tool in tools:
-                toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
-            toolbox_html += "</ul></div>"
+            # If no tool selected for this phase, indicate an empty toolbox
+            toolbox_html += '<em>No tools selected</em>'
+        toolbox_html += "</div>"
+        # Render the toolbox HTML in the respective column
+        toolbox_cols[idx].markdown(toolbox_html, unsafe_allow_html=True)
 
-            st.markdown(toolbox_html, unsafe_allow_html=True)
 # === Tool Dictionary Tab ===
 with tab2:
     st.subheader("Tool Dictionary")
@@ -299,7 +161,7 @@ with tab3:
                     # Embed each video link. Streamlit will auto-render YouTube links or video URLs.
                     st.video(link)
         if not videos_found:
-            st.write("*(No video resources available at this time.)*")
+            st.write("*(No video resources available for this phase.)*")
 
 # === Project Plan Tab ===
 with tab4:
