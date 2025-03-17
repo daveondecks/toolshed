@@ -212,48 +212,36 @@ with tab4:
     dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
 
 
-   # ✅ PDF Download (Fix Blank PDF Issue)
-    if FPDF:
-        pdf = FPDF()
-        pdf.set_auto_page_break(auto=True, margin=15)  # Auto page breaks
-        pdf.add_page()
-        
-        # ✅ Title Section
-        pdf.set_font("Arial", 'B', 16)
-        pdf.cell(0, 10, f"Project Plan - {project_name if project_name else 'Untitled'}", ln=1, align='C')
-        
+if FPDF is not None:  # Ensure FPDF is available
+    pdf = FPDF()
+    pdf.set_auto_page_break(auto=True, margin=15)  # Enable automatic page breaks
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 10, f"Project Plan - {project_name if project_name else 'Untitled'}", ln=1, align='C')
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(0, 10, f"Owner: {project_owner if project_owner else 'N/A'}    Created: {created_date}", ln=1, align='C')
+    pdf.ln(10)
+
+    for _, row in project_plan_df.iterrows():
+        pdf.set_font("Arial", 'B', 14)
+        pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
         pdf.set_font("Arial", '', 12)
-        pdf.cell(0, 10, f"Owner: {project_owner if project_owner else 'N/A'}    Created: {created_date}", ln=1, align='C')
-        pdf.ln(10)
 
-        # ✅ Check if there are tasks, else display a message
-        if project_plan_df.empty:
-            pdf.set_font("Arial", 'I', 12)
-            pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
-        else:
-            # ✅ Iterate over tasks and add them to the PDF
-            for _, row in project_plan_df.iterrows():
-                pdf.set_font("Arial", 'B', 14)
-                pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
-                pdf.set_font("Arial", '', 12)
+        # ✅ Handle special characters to prevent encoding issues
+        task_name = row['Task Name']
+        description = row['Description']
+        try:
+            task_name = task_name.encode('latin-1', 'ignore').decode('latin-1')
+            description = description.encode('latin-1', 'ignore').decode('latin-1')
+        except:
+            task_name = "Encoding Error"
+            description = "Encoding Error"
 
-                # ✅ Handle Encoding Issues
-                task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
-                description = row['Description'] if row['Description'] else "No Description Available"
+        pdf.cell(0, 6, f"{task_name} - {description}", ln=1)
+        pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
+        pdf.ln(4)
 
-                try:
-                    task_name = task_name.encode('latin-1', 'ignore').decode('latin-1')
-                    description = description.encode('latin-1', 'ignore').decode('latin-1')
-                except:
-                    task_name, description = "Encoding Error", "Encoding Error"
-
-                pdf.cell(0, 6, f"🔹 {task_name} - {description}", ln=1)
-                pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
-                pdf.ln(4)
-
-        # ✅ Generate and Allow PDF Download
-        pdf_bytes = pdf.output(dest='S').encode('latin-1')
-        dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
-
-    else:
-        dcol4.write("PDF export not available")
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
+else:
+    dcol4.write("PDF export not available")
