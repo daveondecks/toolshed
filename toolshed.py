@@ -36,7 +36,6 @@ if "created_date" not in st.session_state:
 created_date = st.session_state["created_date"]
 
 st.sidebar.markdown("---")  # separator line
-
 st.sidebar.header("Select Tools for PDCA Phases")
 
 # ✅ Ensure session state is initialized properly
@@ -72,89 +71,92 @@ pdca_colors = {
 st.title("🧰 One Team Continuous Improvement Toolshed")
 tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
 
-# === Toolshed Tab ===
-with tab1:
-    st.subheader("Toolshed")
-    st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
+# === Tool Dictionary Tab ===
+with tab2:
+    st.subheader("Tool Dictionary")
+    st.write("Browse and search for tools. Click on a tool name to learn more (if link is available).")
 
-    # ✅ PDCA Descriptions
-    descriptions = {
-        "Plan": """📌 **Description:** The **Plan** phase focuses on identifying problems, analyzing root causes, and planning improvements.  
-        🛠 **Tools:** 5 Whys, Fishbone Diagram, SWOT, SMART Goals  
-        ✅ **Best Practices:** Use data, involve stakeholders, keep objectives clear  
-        ⚠️ **Mistakes:** Skipping root cause analysis, vague goals, poor stakeholder engagement""",
+    # ✅ Ensure tool dictionary is displayed correctly
+    query = st.text_input("Search tools:", "")
+    if query:
+        # ✅ Case-insensitive filtering
+        mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | tool_data['Description'].str.contains(query, case=False, na=False)
+        filtered_data = tool_data[mask].copy()
+    else:
+        filtered_data = tool_data.copy()
 
-        "Do": """📌 **Description:** The **Do** phase involves implementing the planned solutions on a small scale.  
-        🛠 **Tools:** Pilot Testing, SOPs, Training, Gantt Charts  
-        ✅ **Best Practices:** Test before full rollout, train employees, track progress  
-        ⚠️ **Mistakes:** Lack of training, too many changes at once, ignoring feedback""",
+    # ✅ Convert 'Tool Name' into clickable links
+    if 'More Info' in filtered_data.columns:
+        filtered_data['Tool Name'] = filtered_data.apply(
+            lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>" 
+                        if pd.notna(row['More Info']) and str(row['More Info']).strip() != "" 
+                        else row['Tool Name'],
+            axis=1
+        )
 
-        "Check": """📌 **Description:** The **Check** phase reviews results and compares them with expected outcomes.  
-        🛠 **Tools:** KPI Tracking, Control Charts, Pareto Analysis  
-        ✅ **Best Practices:** Review objectively, involve the team, use both qualitative & quantitative data  
-        ⚠️ **Mistakes:** No KPIs set, ignoring feedback, assuming success without checking""",
+    # ✅ Display tool dictionary table
+    dict_display = filtered_data[['PDCA Category', 'Tool Name', 'Description']].copy()
+    dict_display.rename(columns={'PDCA Category': 'Phase'}, inplace=True)
 
-        "Act": """📌 **Description:** The **Act** phase determines whether changes should be standardized or modified.  
-        🛠 **Tools:** SOP Updates, Training Plans, Lessons Learned  
-        ✅ **Best Practices:** Document changes, communicate improvements, continue PDCA cycle  
-        ⚠️ **Mistakes:** No documentation, no training follow-up, assuming process is fixed"""
-    }
-
-    # ✅ PDCA Expanders
-    exp_cols = st.columns(4)
-    for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-        with exp_cols[i].expander(f"{phase}", expanded=False):
-            st.markdown(descriptions[phase])
-
-    # ✅ Display PDCA Toolboxes
-    toolbox_cols = st.columns(4)
-    for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-        with toolbox_cols[idx]:
-            tools = st.session_state.selected_tools[phase]
-            box_color = pdca_colors[phase]
-
-            # ✅ Render PDCA-colored Toolbox Header
-            st.markdown(f"""
-            <div style="
-                background-color: {box_color}; 
-                padding: 15px; 
-                border-radius: 10px; 
-                text-align: center; 
-                color: white; 
-                font-weight: bold;">
-                {phase} Toolbox
-            </div>
-            """, unsafe_allow_html=True)
-
-            # ✅ Display tools or "No tools selected"
-            if not tools:
-                st.markdown(f"""
-                <div style="background-color: #F1F1F1; padding: 10px; border-radius: 5px; text-align: center; margin-top: 5px; color: black;">
-                No tools selected
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                toolbox_html = f"""
-                <div style="background-color: white; border: 2px solid {box_color}; border-radius: 10px; padding: 10px; margin-top: 5px;">
-                <ul style="list-style-type: none; padding: 0;">
-                """
-                for tool in tools:
-                    toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
-                toolbox_html += "</ul></div>"
-
-                st.markdown(toolbox_html, unsafe_allow_html=True)
+    if dict_display.empty:
+        st.write("No tools found. Try a different search term.")
+    else:
+        st.markdown(dict_display.to_html(escape=False, index=False), unsafe_allow_html=True)
 
 # === Project Plan Tab ===
 with tab4:
     st.subheader("Project Plan")
     st.write("The table below outlines the selected tools as tasks in your PDCA project plan.")
 
-    # ✅ Display table
-    all_tasks = [{"PDCA Phase": phase, "Task Name": tool, "Description": ""} for phase in ["Plan", "Do", "Check", "Act"] for tool in st.session_state.selected_tools[phase]]
+    # ✅ Add missing tool descriptions
+    all_tasks = []
+    for phase in ["Plan", "Do", "Check", "Act"]:
+        for tool in st.session_state.selected_tools[phase]:
+            desc = tool_data.loc[tool_data["Tool Name"] == tool, "Description"].values
+            desc_text = desc[0] if len(desc) > 0 else ""
+            all_tasks.append({"PDCA Phase": phase, "Task Name": tool, "Description": desc_text})
+
     project_plan_df = pd.DataFrame(all_tasks)
+
+    # ✅ Display project plan table
     st.dataframe(project_plan_df, use_container_width=True)
 
     # ✅ Download buttons
-    st.write("Download Project Plan:")
-    st.download_button("Download CSV", project_plan_df.to_csv(index=False), "project_plan.csv", "text/csv")
-    st.download_button("Download TXT", project_plan_df.to_csv(index=False, sep="\t"), "project_plan.txt", "text/plain")
+    st.markdown("**Download Project Plan:**")
+    dcol1, dcol2, dcol3, dcol4 = st.columns(4)
+
+    # ✅ CSV Download
+    csv_data = project_plan_df.to_csv(index=False, encoding='utf-8-sig')
+    dcol1.download_button("Download CSV", data=csv_data, file_name="Project_Plan.csv", mime="text/csv")
+
+    # ✅ TXT Download
+    text_data = project_plan_df.to_csv(index=False, sep='\t')
+    dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
+
+    # ✅ PDF Download (Re-Added)
+    try:
+        from fpdf import FPDF
+    except ImportError:
+        FPDF = None
+
+    if FPDF:
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", 'B', 16)
+        pdf.cell(0, 10, f"Project Plan - {project_name if project_name else 'Untitled'}", ln=1, align='C')
+        pdf.set_font("Arial", '', 12)
+        pdf.cell(0, 10, f"Owner: {project_owner if project_owner else 'N/A'}    Created: {created_date}", ln=1, align='C')
+        pdf.ln(10)
+
+        for _, row in project_plan_df.iterrows():
+            pdf.set_font("Arial", 'B', 14)
+            pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
+            pdf.set_font("Arial", '', 12)
+            pdf.cell(0, 6, f"{row['Task Name']} - {row['Description']}", ln=1)
+            pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
+            pdf.ln(4)
+
+        pdf_bytes = pdf.output(dest='S').encode('latin-1')
+        dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
+    else:
+        dcol4.write("PDF export not available")
