@@ -32,7 +32,7 @@ project_name = st.sidebar.text_input("Project Name")
 project_owner = st.sidebar.text_input("Project Owner")
 # Store created date on first run
 if "created_date" not in st.session_state:
-    st.session_state["created_date"] = date.today().strftime("%Y-%m-%d")
+    st.session_state["created_date"] = date.today().strftime("%d-%m-%Y")
 created_date = st.session_state["created_date"]
 
 st.sidebar.markdown("---")  # separator line
