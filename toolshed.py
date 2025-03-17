@@ -27,9 +27,17 @@ tool_data = tool_data.rename(columns={
 
 # ✅ Sidebar: Project Details & PDCA Selection
 st.sidebar.title("Project Details")
-project_name = st.sidebar.text_input("Project Name")
-project_owner = st.sidebar.text_input("Project Owner")
 
+# ✅ Store Project Name & Owner in session state
+if "project_name" not in st.session_state:
+    st.session_state["project_name"] = ""
+
+if "project_owner" not in st.session_state:
+    st.session_state["project_owner"] = ""
+
+# ✅ Save inputs to session state (NO DUPLICATE `text_input`)
+st.session_state["project_name"] = st.sidebar.text_input("Project Name", value=st.session_state["project_name"])
+st.session_state["project_owner"] = st.sidebar.text_input("Project Owner", value=st.session_state["project_owner"])
 # ✅ Store created date
 if "created_date" not in st.session_state:
     st.session_state["created_date"] = date.today().strftime("%d-%m-%Y")
@@ -70,6 +78,71 @@ pdca_colors = {
 # ✅ Main Tabs
 st.title("🧰 One Team Continuous Improvement Toolshed")
 tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
+# === Toolshed Tab ===
+with tab1:
+    st.subheader("Toolshed")
+    st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
+
+   # ✅ Ensure session state is initialized before reading
+if "selected_tools" not in st.session_state:
+    st.session_state.selected_tools = {
+        "Plan": [],
+        "Do": [],
+        "Check": [],
+        "Act": []
+    }
+
+selected_tools = st.session_state.selected_tools  # Now correctly assigned
+
+    # ✅ Create PDCA toolboxes with colors
+    toolbox_cols = st.columns(4)
+    for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
+        with toolbox_cols[idx]:
+            tools = selected_tools[phase]
+            box_color = pdca_colors[phase]  
+
+            # ✅ Render PDCA-colored Toolbox Header
+            st.markdown(f"""
+            <div style="
+                background-color: {box_color}; 
+                padding: 15px; 
+                border-radius: 10px; 
+                text-align: center; 
+                color: white; 
+                font-weight: bold;">
+                {phase} Toolbox
+            </div>
+            """, unsafe_allow_html=True)
+
+            # ✅ Display selected tools
+            if not tools:
+                st.markdown(f"""
+                <div style="
+                    background-color: #F1F1F1; 
+                    padding: 10px; 
+                    border-radius: 5px;
+                    text-align: center;
+                    margin-top: 5px;
+                    color: black;">
+                    No tools selected
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                toolbox_html = f"""
+                <div style="
+                    background-color: white;
+                    border: 2px solid {box_color};
+                    border-radius: 10px;
+                    padding: 10px;
+                    margin-top: 5px;
+                ">
+                <ul style="list-style-type: none; padding: 0;">
+                """
+                for tool in tools:
+                    toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
+                toolbox_html += "</ul></div>"
+
+                st.markdown(toolbox_html, unsafe_allow_html=True)
 
 # === Tool Dictionary Tab ===
 with tab2:
@@ -103,9 +176,21 @@ with tab2:
     else:
         st.markdown(dict_display.to_html(escape=False, index=False), unsafe_allow_html=True)
 
-# === Project Plan Tab ===
+
+    # === Project Plan Tab ===
 with tab4:
     st.subheader("Project Plan")
+
+    # ✅ Retrieve project details from session state
+    project_name = st.session_state["project_name"]
+    project_owner = st.session_state["project_owner"]
+    created_date = st.session_state.get("created_date", date.today().strftime("%d-%m-%Y"))
+
+    # ✅ Display Project Details
+    st.markdown(f"**Project Name:** {project_name} &nbsp;&nbsp; **Owner:** {project_owner} &nbsp;&nbsp; **Created:** {created_date}", unsafe_allow_html=True)
+    st.write("")  # Empty line for spacing
+
+    # ✅ Introductory text for the project plan table
     st.write("The table below outlines the selected tools as tasks in your PDCA project plan.")
 
     # ✅ Add missing tool descriptions
@@ -156,7 +241,7 @@ with tab4:
             pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
             pdf.ln(4)
 
-        pdf_bytes = pdf.output(dest='S').encode('latin-1')
+        pdf_bytes = pdf.output(dest='S').encode('utf-8')
         dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
     else:
         dcol4.write("PDF export not available")
