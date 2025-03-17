@@ -251,7 +251,7 @@ if FPDF:
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
-    # ✅ Define PDCA Colors
+    # ✅ Define PDCA Colors (RGB)
     pdca_colors = {
         "Plan": (255, 215, 0),    # Gold Yellow
         "Do": (50, 205, 50),      # Green
@@ -285,14 +285,17 @@ if FPDF:
             pdf.set_fill_color(*color)  # Background color
             pdf.set_text_color(255, 255, 255)  # White text
             pdf.set_font("Arial", 'B', 14)
-            pdf.cell(0, 8, f"{phase} Phase", ln=1, align="L", fill=True)
+
+            # ✅ Make phase title stand out
+            pdf.cell(0, 10, f"  {phase} Phase  ", ln=1, align="L", fill=True)
 
             # ✅ Reset to black text for content
             pdf.set_text_color(0, 0, 0)
             pdf.set_font("Arial", '', 12)
-            pdf.cell(0, 6, f"🔹 {task_name} - {description}", ln=1)
+            pdf.multi_cell(0, 6, f"🔹 {task_name} - {description}")
             pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
             pdf.ln(4)
+
     else:
         pdf.set_font("Arial", 'I', 12)
         pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
