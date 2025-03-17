@@ -227,35 +227,32 @@ if FPDF is not None:
     pdf.cell(0, 10, f"Owner: {st.session_state.get('project_owner', 'N/A')}    Created: {st.session_state.get('created_date', 'N/A')}", ln=1, align='C')
     pdf.ln(10)
 
-    # ✅ Check if there are tasks
-    if project_plan_df.empty:
-        pdf.set_font("Arial", 'I', 12)
-        pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
-        st.write("⚠️ Debug: No tasks found in project_plan_df")
-    else:
-        st.write("✅ Debug: Tasks found - Writing PDF...")
+    # ✅ Write tasks to PDF
+    if not project_plan_df.empty:
         for _, row in project_plan_df.iterrows():
             pdf.set_font("Arial", 'B', 14)
             pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
             pdf.set_font("Arial", '', 12)
 
+            # ✅ Handle encoding issues
             task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
             description = row['Description'] if row['Description'] else "No Description Available"
 
-            # ✅ Remove emojis and special symbols
             def clean_text(text):
                 return ''.join(c for c in text if ord(c) < 128)  # Keep only ASCII characters
 
             task_name = clean_text(task_name)
             description = clean_text(description)
 
-            st.write(f"📄 Adding to PDF: {task_name} - {description}")
-
             pdf.cell(0, 6, f"{task_name} - {description}", ln=1)
             pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
             pdf.ln(4)
 
-    # ✅ Generate and Allow PDF Download
+    else:
+        pdf.set_font("Arial", 'I', 12)
+        pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
+
+    # ✅ Generate PDF Download Button
     pdf_bytes = pdf.output(dest='S').encode('latin-1')
     dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
 
