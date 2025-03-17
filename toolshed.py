@@ -3,53 +3,17 @@ import pandas as pd
 import io
 import xlsxwriter
 from datetime import date
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-
 
 # Set wide layout
 st.set_page_config(page_title="PDCA Toolshed", layout="wide")
 
-# ✅ Function to Update Tool Usage
-def update_tool_usage(selected_tools):
-    global tool_data  # Ensure we're modifying the loaded DataFrame
-
-    for tool in selected_tools:
-        # ✅ Find the row matching the tool
-        mask = tool_data["Tool Name"] == tool
-        if mask.any():
-            # ✅ Increment usage count
-            tool_data.loc[mask, "Usage Count"] += 1  
-            
-            # ✅ Update last used date
-            tool_data.loc[mask, "Last Used"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  
-
-            # ✅ Increment project count
-            tool_data.loc[mask, "Project Count"] += 1  
-
-    # ✅ Save updated data back to CSV
-    tool_data.to_csv(DATA_PATH, index=False)
-
-    # ✅ Load tool data with usage tracking
-DATA_PATH = "Data/Tools_description.csv"
-
+# ✅ Load tool data
+@st.cache_data
 def load_data():
-    if os.path.exists(DATA_PATH):
-        df = pd.read_csv(DATA_PATH)
-        
-    # ✅ Ensure new columns exist (if missing, create them)
-        if "Usage Count" not in df.columns:
-            df["Usage Count"] = 0
-        if "Last Used" not in df.columns:
-            df["Last Used"] = ""
-        if "Project Count" not in df.columns:
-            df["Project Count"] = 0
-            
-        return df
-    else:
-        st.error("⚠️ Tools_description.csv not found!")
-        return pd.DataFrame()  # Return empty DataFrame if file is missing
+    try:
+        return pd.read_csv("Data/Tools_description.csv")
+    except FileNotFoundError:
+        return pd.read_csv("Tools_description.csv")
 
 tool_data = load_data()
 
@@ -113,7 +77,7 @@ pdca_colors = {
 
 # ✅ Main Tabs
 st.title("🧰 One Team Continuous Improvement Toolshed")
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan", "Analytics"])
+tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
 
 # === Toolshed Tab ===
 with tab1:
@@ -205,7 +169,7 @@ with tab2:
     else:
         st.container()  # Wrap table inside a container
         st.dataframe(dict_display, use_container_width=True)
-               
+
 # === Video Library Tab ===
 with tab3:
     st.subheader("🎥 Video Library - Work in Progress 🚧")
@@ -235,16 +199,6 @@ with tab4:
     project_name = st.session_state["project_name"]
     project_owner = st.session_state["project_owner"]
     created_date = st.session_state.get("created_date", date.today().strftime("%d-%m-%Y"))
-
-    # ✅ Get selected tools from session state
-    selected_tools = []
-    for phase in ["Plan", "Do", "Check", "Act"]:
-    selected_tools.extend(st.session_state.selected_tools[phase])
-
-# ✅ Update tool usage when a project is created
-if selected_tools:
-    update_tool_usage(selected_tools)
-
 
     # ✅ Display Project Details
     st.markdown(f"**Project Name:** {project_name} &nbsp;&nbsp; **Owner:** {project_owner} &nbsp;&nbsp; **Created:** {created_date}", unsafe_allow_html=True)
@@ -335,73 +289,3 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
-    tab5 = st.tabs(["Analytics Dashboard"])[0]  # Add a new tab for Analytics
-
-# === Analytics Tab ===
-with tab5:
-    st.subheader("📊 PDCA Analytics Dashboard")
-    st.write("Analyze tool usage trends and find high-impact tools based on past selections.")
-
-    # ✅ Initialize dictionaries for tracking tool & phase usage
-    tool_usage = {}
-    phase_usage = {"Plan": 0, "Do": 0, "Check": 0, "Act": 0}
-    tool_combinations = []
-
-    # ✅ Count tool usage per phase & identify common tool pairings
-    for phase, tools in st.session_state.selected_tools.items():
-        phase_usage[phase] = len(tools)  # Track phase distribution
-        for tool in tools:
-            tool_usage[tool] = tool_usage.get(tool, 0) + 1
-        for i in range(len(tools)):
-            for j in range(i + 1, len(tools)):  # Avoid duplicate pairs
-                tool_combinations.append((tools[i], tools[j]))
-
-    # ✅ Convert tool usage to DataFrame
-    tool_usage_df = pd.DataFrame(tool_usage.items(), columns=["Tool Name", "Usage Count"]).sort_values(by="Usage Count", ascending=False)
-
-    # ✅ Display tool usage
-    st.markdown("### 📈 Most Used PDCA Tools")
-    if tool_usage_df.empty:
-        st.warning("No tools selected yet.")
-    else:
-        st.dataframe(tool_usage_df, use_container_width=True)
-
-        # ✅ Plot a Bar Chart for Tool Usage
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.barh(tool_usage_df["Tool Name"], tool_usage_df["Usage Count"], color="skyblue")
-        ax.set_xlabel("Usage Count")
-        ax.set_ylabel("Tool Name")
-        ax.set_title("📊 Most Used PDCA Tools")
-        plt.gca().invert_yaxis()  # Ensure highest values are at the top
-        st.pyplot(fig)
-
-        # ✅ Plot PDCA Phase Distribution (Pie Chart)
-        st.markdown("### 📌 PDCA Phase Distribution")
-
-        # Fix NaN issue before plotting
-        import numpy as np
-        phase_usage = {phase: len(tools) if len(tools) > 0 else 0 for phase, tools in st.session_state.selected_tools.items()}
-        phase_usage = {k: 0 if np.isnan(v) else v for k, v in phase_usage.items()}
-
-        fig1, ax1 = plt.subplots()
-        ax1.pie(
-            phase_usage.values(),
-            labels=phase_usage.keys(),
-            autopct='%1.1f%%',
-            colors=["gold", "limegreen", "dodgerblue", "orangered"]
-        )
-        st.pyplot(fig1)
-
-    # ✅ Generate Tool Pairing Heatmap (If enough data)
-    if tool_combinations:
-        st.markdown("### 🔥 Tool Pairing Trends (Heatmap)")
-        pairing_df = pd.DataFrame(tool_combinations, columns=["Tool 1", "Tool 2"])
-        heatmap_data = pairing_df.pivot_table(index="Tool 1", columns="Tool 2", aggfunc=len, fill_value=0)
-
-        fig3, ax3 = plt.subplots(figsize=(10, 8))
-        sns.heatmap(heatmap_data, annot=True, cmap="Blues", linewidths=0.5, fmt="d")
-        plt.xticks(rotation=45, ha="right")
-        plt.yticks(rotation=0)
-        st.pyplot(fig3)
-    else:
-        st.warning("Not enough data to generate a heatmap. Select more tools!")
