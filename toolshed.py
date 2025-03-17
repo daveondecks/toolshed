@@ -61,14 +61,102 @@ with tab1:
     st.subheader("Toolshed")
     st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
     
-    # PDCA step descriptions (to show in expanders above each toolbox column)
-    descriptions = {
-        "Plan":  "Plan: Define objectives and processes needed to deliver results.",
-        "Do":    "Do: Implement the plan and execute the process on a small scale.",
-        "Check": "Check: Monitor and evaluate the results against the expected outcomes.",
-        "Act":   "Act: Apply learning to adjust the process, and standardize improvements."
-    }
-    # Display four expanders side by side, one for each PDCA phase description
+   # PDCA step descriptions (to show in expanders above each toolbox column)
+descriptions = {
+    "Plan":  """📌 **Description:**
+The **Plan** phase is about **identifying a problem, understanding the root cause, and developing a solution.** 
+This is where you analyze the current state, set objectives, and plan improvements.
+
+🛠 **Typical Tools:**
+- 5 Whys Analysis (to identify root cause)
+- Ishikawa (Fishbone) Diagram (cause & effect analysis)
+- Process Mapping (to visualize the workflow)
+- SWOT Analysis (to evaluate strengths, weaknesses, opportunities & threats)
+- SMART Goal Setting (to create clear objectives)
+- Risk Assessment Matrix (to evaluate potential risks)
+
+✅ **Best Practices:**
+- Clearly define the problem before jumping to solutions.
+- Engage key stakeholders early in the process.
+- Use data and facts, not opinions, to guide planning.
+- Break down complex issues into manageable parts.
+
+⚠️ **Watch-Outs (Common Mistakes):**
+- Jumping to conclusions without root cause analysis.
+- Setting vague or unrealistic goals.
+- Not involving the right people in the planning process.
+- Overcomplicating the plan with too much documentation instead of actionable steps.
+""",
+
+    "Do": """📌 **Description:**
+The **Do** phase involves **implementing the plan on a small scale** (pilot test) while monitoring progress.
+
+🛠 **Typical Tools:**
+- Pilot Testing (small-scale trial before full rollout)
+- Standard Operating Procedures (SOPs) to ensure consistency
+- Training & Work Instructions to prepare employees
+- Gantt Charts to track implementation timelines
+- Resource Allocation Plans for materials, time, and personnel
+
+✅ **Best Practices:**
+- Start with a small test before full rollout.
+- Ensure team buy-in before implementing changes.
+- Provide clear training and instructions.
+- Monitor and collect data throughout the process.
+
+⚠️ **Watch-Outs (Common Mistakes):**
+- Failing to provide proper training to employees.
+- Not having a backup plan in case of failure.
+- Implementing too many changes at once.
+- Ignoring feedback from frontline workers.
+""",
+
+    "Check": """📌 **Description:**
+The **Check** phase focuses on **analyzing the results** of the pilot test to determine effectiveness.
+
+🛠 **Typical Tools:**
+- Before & After Analysis to measure impact
+- Key Performance Indicators (KPIs) to track progress
+- Control Charts to monitor process variation
+- Pareto Analysis to identify the biggest contributors to problems
+- Employee Feedback Surveys to gauge user experience
+
+✅ **Best Practices:**
+- Compare actual results to planned objectives.
+- Involve the team in reviewing results.
+- Use both qualitative & quantitative data for analysis.
+- Identify unintended consequences of the change.
+
+⚠️ **Watch-Outs (Common Mistakes):**
+- Not having measurable KPIs before testing.
+- Only looking at short-term results.
+- Ignoring feedback from frontline employees.
+- Assuming no further improvements are needed if the results look good.
+""",
+
+    "Act": """📌 **Description:**
+The **Act** phase determines whether the change should be **fully implemented, modified, or abandoned.**
+
+🛠 **Typical Tools:**
+- Standard Operating Procedures (SOPs) to ensure repeatability
+- Lessons Learned Reports to document findings
+- Root Cause Verification to ensure issues are fully resolved
+- Training & Change Management Plans to ensure sustainability
+- PDCA Cycle Continuation for ongoing improvement
+
+✅ **Best Practices:**
+- Standardize successful changes by integrating them into SOPs.
+- Communicate the changes across teams and departments.
+- Monitor the process over time to ensure consistency.
+- Celebrate success and recognize contributions.
+
+⚠️ **Watch-Outs (Common Mistakes):**
+- Failing to document changes in work procedures.
+- Not ensuring leadership support for full rollout.
+- Ignoring sustainability—changes should be maintained long-term.
+- Assuming the process is "fixed"—PDCA should continue as an ongoing cycle.
+"""
+}    # Display four expanders side by side, one for each PDCA phase description
     exp_cols = st.columns(4)
     for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
         with exp_cols[i].expander(f"{phase}", expanded=False):
