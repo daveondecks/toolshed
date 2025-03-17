@@ -137,23 +137,21 @@ with tab1:
 
                 st.markdown(toolbox_html, unsafe_allow_html=True)
 
-# ✅ Tool Dictionary Tab
+# === Tool Dictionary Tab ===
 with tab2:
     st.subheader("Tool Dictionary")
-    st.write("Browse and search for tools. Click on a tool name to learn more (if link is available).")
+    
+    # Search box
+    query = st.text_input("🔍 Search tools:", "")
 
-    # ✅ Search Box (Full Width)
-    query = st.text_input("Search tools:", "", key="tool_search", help="Search by tool name or description")
-
-    # ✅ Apply search filter
+    # ✅ Case-insensitive filtering
     if query:
-        mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | \
-               tool_data['Description'].str.contains(query, case=False, na=False)
+        mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | tool_data['Description'].str.contains(query, case=False, na=False)
         filtered_data = tool_data[mask].copy()
     else:
         filtered_data = tool_data.copy()
 
-    # ✅ Convert 'Tool Name' into Clickable Links
+    # ✅ Convert 'Tool Name' into clickable links
     if 'More Info' in filtered_data.columns:
         filtered_data['Tool Name'] = filtered_data.apply(
             lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>" 
@@ -162,50 +160,15 @@ with tab2:
             axis=1
         )
 
-    # ✅ Prepare Data for Display
+    # ✅ Display table with same width as the search box
     dict_display = filtered_data[['PDCA Category', 'Tool Name', 'Description']].copy()
     dict_display.rename(columns={'PDCA Category': 'Phase'}, inplace=True)
 
     if dict_display.empty:
-        st.write("No tools found. Try a different search term.")
+        st.warning("⚠️ No tools found. Try a different search term.")
     else:
-        # ✅ Define Custom CSS for Full-Width Table + Alternating Row Colors
-        table_html = """
-        <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th {
-            background-color: #2c3e50; /* Dark Blue Header */
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-size: 14px;
-        }
-        td {
-            padding: 10px;
-            font-size: 13px;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9; /* Light Gray for Even Rows */
-        }
-        tr:nth-child(odd) {
-            background-color: #ffffff; /* White for Odd Rows */
-        }
-        a {
-            text-decoration: none;
-            color: #3498db; /* Blue Links */
-            font-weight: bold;
-        }
-        </style>
-        """
-
-        # ✅ Convert DataFrame to HTML and ensure full-width styling
-        table_html += dict_display.to_html(escape=False, index=False)
-
-        # ✅ Render the full-width styled table in Streamlit
-        st.markdown(table_html, unsafe_allow_html=True)
+        st.container()  # Wrap table inside a container
+        st.dataframe(dict_display, use_container_width=True)
 
 # === Video Library Tab ===
 with tab3:
