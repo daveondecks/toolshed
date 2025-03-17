@@ -56,10 +56,6 @@ st.title("🧰 One Team Continuous Improvement Toolshed")
 # Create top-level tabs
 tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
 
-# === Toolshed Tab ===
-st.subheader("Toolshed")
-st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
-
 # Define PDCA colors (matching the screenshot)
 pdca_colors = {
     "Plan": "#FFD700",  # Gold Yellow
@@ -68,6 +64,32 @@ pdca_colors = {
     "Act": "#FF4500"    # Red
 }
 
+# ✅ Ensure session state is initialized properly
+if "selected_tools" not in st.session_state:
+    st.session_state.selected_tools = {
+        "Plan": [],
+        "Do": [],
+        "Check": [],
+        "Act": []
+    }
+
+# ✅ Sidebar for selecting tools
+st.sidebar.header("Select Tools for PDCA Phases")
+for phase in ["Plan", "Do", "Check", "Act"]:
+    selected_temp = st.sidebar.multiselect(
+        f"{phase} Tools:",
+        options=["Five Ys", "MoSCoW", "Six S’s", "VSM", "Pareto Chart", "Kaizen", "Heat Map", "Check sheet", "Quality", "Comms", "Lessons"],
+        default=st.session_state.selected_tools.get(phase, [])  # Ensure safe retrieval
+    )
+
+    # ✅ Only update session state if selection changes
+    if selected_temp != st.session_state.selected_tools[phase]:
+        st.session_state.selected_tools[phase] = selected_temp
+
+
+# === Toolshed Tab ===
+st.subheader("Toolshed")
+st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
 
 # ✅ PDCA Detailed Descriptions (Expander Menus)
 descriptions = {
