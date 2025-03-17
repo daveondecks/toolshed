@@ -251,58 +251,53 @@ if FPDF:
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
-    # ✅ Define PDCA Colors (RGB)
+    # ✅ Define PDCA Colors
     pdca_colors = {
-        "Plan": (255, 215, 0),    # Gold Yellow
-        "Do": (50, 205, 50),      # Green
-        "Check": (30, 144, 255),  # Blue
-        "Act": (255, 69, 0)       # Red
+        "Plan": (255, 215, 0),  # Gold Yellow
+        "Do": (50, 205, 50),    # Green
+        "Check": (30, 144, 255), # Blue
+        "Act": (255, 69, 0)     # Red
     }
 
-    # ✅ Title Section (Black Title)
+    # ✅ Title Section
     pdf.set_font("Arial", 'B', 16)
-    pdf.set_text_color(0, 0, 0)
-    pdf.cell(0, 10, f"Project Plan - {st.session_state.get('project_name', 'Untitled')}", ln=1, align='C')
+    pdf.cell(0, 10, f"Project Plan - {project_name}", ln=1, align='C')
     pdf.set_font("Arial", '', 12)
-    pdf.cell(0, 10, f"Owner: {st.session_state.get('project_owner', 'N/A')}    Created: {st.session_state.get('created_date', 'N/A')}", ln=1, align='C')
+    pdf.cell(0, 10, f"Owner: {project_owner}    Created: {created_date}", ln=1, align='C')
     pdf.ln(10)
 
-    # ✅ Write tasks with PDCA colors
     if not project_plan_df.empty:
         for _, row in project_plan_df.iterrows():
             phase = row['PDCA Phase']
-            task_name = row['Task Name']
-            description = row['Description']
+            task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
+            description = row['Description'] if row['Description'] else "No Description Available"
 
+            # ✅ Remove unsupported characters
             def clean_text(text):
-                return ''.join(c for c in text if ord(c) < 128)  # Remove non-ASCII characters
+                return ''.join(c for c in text if ord(c) < 128)  # Keep only ASCII characters
 
             task_name = clean_text(task_name)
             description = clean_text(description)
 
-            # ✅ Set PDCA Color
-            color = pdca_colors.get(phase, (0, 0, 0))
-            pdf.set_fill_color(*color)  # Background color
+            # ✅ Set Background Color for Phase Headers
+            pdf.set_fill_color(*pdca_colors.get(phase, (200, 200, 200)))  # Default grey if phase not found
             pdf.set_text_color(255, 255, 255)  # White text
             pdf.set_font("Arial", 'B', 14)
-
-            # ✅ Make phase title stand out
-            pdf.cell(0, 10, f"  {phase} Phase  ", ln=1, align="L", fill=True)
-
-            # ✅ Reset to black text for content
+            pdf.cell(0, 8, f" {phase} Phase ", ln=1, fill=True)
+            
+            # ✅ Reset Text Color to Black
             pdf.set_text_color(0, 0, 0)
             pdf.set_font("Arial", '', 12)
-            pdf.multi_cell(0, 6, f"🔹 {task_name} - {description}")
+            pdf.cell(0, 6, f"{task_name} - {description}", ln=1)
             pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
             pdf.ln(4)
-
     else:
         pdf.set_font("Arial", 'I', 12)
         pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
 
     # ✅ Generate and Allow PDF Download
-    pdf_bytes = pdf.output(dest='S').encode('latin-1')
+    pdf_bytes = pdf.output(dest='S').encode('utf-8')
     dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
 
 else:
-    dcol4.write("⚠️ PDF export not available (FPDF not installed)")
+    dcol4.write("⚠️ PDF export not available")
