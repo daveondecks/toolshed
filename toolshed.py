@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import xlsxwriter
 from datetime import date
 
 # Set wide layout for better display of four columns side by side
