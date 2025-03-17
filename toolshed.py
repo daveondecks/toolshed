@@ -283,20 +283,27 @@ if FPDF:
             pdf.set_fill_color(*pdca_colors.get(phase, (200, 200, 200)))  # Default grey if phase not found
             pdf.set_text_color(255, 255, 255)  # White text
             pdf.set_font("Arial", 'B', 14)
-            pdf.cell(0, 8, f" {phase} Phase ", ln=1, fill=True)
+            pdf.cell(0, 10, f" {phase} Phase ", ln=1, fill=True)
             
             # ✅ Reset Text Color to Black
             pdf.set_text_color(0, 0, 0)
             pdf.set_font("Arial", '', 12)
-            pdf.cell(0, 6, f"{task_name} - {description}", ln=1)
+            pdf.multi_cell(0, 6, f"{task_name} - {description}")  # Using multi_cell() to wrap text
             pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
             pdf.ln(4)
     else:
         pdf.set_font("Arial", 'I', 12)
         pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
 
-    # ✅ Generate and Allow PDF Download
-    pdf_bytes = pdf.output(dest='S').encode('utf-8')
+    # ✅ Generate PDF in a Bytes Buffer
+    pdf_buffer = io.BytesIO()
+    pdf.output(pdf_buffer)  # Write the PDF to a buffer
+    pdf_bytes = pdf_buffer.getvalue()  # Retrieve the bytes from the buffer
+
+    # ✅ Debug Output: Check if PDF is Generated
+    print(f"Generated PDF Size: {len(pdf_bytes)} bytes")  # Should not be 0
+
+    # ✅ Allow PDF Download
     dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
 
 else:
