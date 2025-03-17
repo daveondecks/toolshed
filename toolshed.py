@@ -213,7 +213,7 @@ with tab4:
     for phase in ["Plan", "Do", "Check", "Act"]:
         for tool in st.session_state.selected_tools[phase]:
             desc = tool_data.loc[tool_data["Tool Name"] == tool, "Description"].values
-            desc_text = desc[0] if len(desc) > 0 else ""
+            desc_text = desc[0] if len(desc) > 0 else "No description available"
             all_tasks.append({"PDCA Phase": phase, "Task Name": tool, "Description": desc_text})
 
     project_plan_df = pd.DataFrame(all_tasks)
@@ -237,7 +237,7 @@ with tab4:
         excel_data = excel_output.getvalue()
         dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
     except Exception as e:
-        dcol2.write("Excel export not available")
+        dcol2.write("⚠️ Excel export not available")
 
     # ✅ TXT Download
     text_data = project_plan_df.to_csv(index=False, sep='\t')
@@ -253,7 +253,7 @@ with tab4:
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
         pdf.add_page()
-        
+
         # ✅ Title Section
         pdf.set_font("Arial", 'B', 16)
         pdf.cell(0, 10, f"Project Plan - {project_name}", ln=1, align='C')
@@ -261,21 +261,20 @@ with tab4:
         pdf.cell(0, 10, f"Owner: {project_owner}    Created: {created_date}", ln=1, align='C')
         pdf.ln(10)
 
+        # ✅ Helper function to clean text for FPDF
+        def clean_text(text):
+            """Remove special characters and ensure text is compatible with FPDF (latin-1)."""
+            return ''.join(c for c in text if ord(c) < 128)  # Replace unsupported chars
+
+        # ✅ Write tasks to PDF
         if not project_plan_df.empty:
             for _, row in project_plan_df.iterrows():
                 pdf.set_font("Arial", 'B', 14)
                 pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
                 pdf.set_font("Arial", '', 12)
 
-                def clean_text(text):
-                    return ''.join(c for c in text if ord(c) < 128)  # Remove non-ASCII characters
-
                 task_name = clean_text(row['Task Name'])
                 description = clean_text(row['Description'])
-
-                # ✅ Handle encoding issues
-                task_name = ''.join(c for c in task_name if ord(c) < 128)
-                description = ''.join(c for c in description if ord(c) < 128)
 
                 pdf.cell(0, 6, f"🔹 {task_name} - {description}", ln=1)
                 pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
@@ -287,4 +286,4 @@ with tab4:
         pdf_bytes = pdf.output(dest='S').encode('latin-1')
         dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
     else:
-        dcol4.write("PDF export not available")
+        dcol4.write("⚠️ PDF export not available")
