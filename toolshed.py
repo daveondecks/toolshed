@@ -140,12 +140,12 @@ with tab1:
 # === Tool Dictionary Tab ===
 with tab2:
     st.subheader("Tool Dictionary")
-    st.write("Browse and search for tools. Click on a tool name to learn more (if link is available).")
+    
+    # Search box
+    query = st.text_input("🔍 Search tools:", "")
 
-    # ✅ Ensure tool dictionary is displayed correctly
-    query = st.text_input("Search tools:", "")
+    # ✅ Case-insensitive filtering
     if query:
-        # ✅ Case-insensitive filtering
         mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | tool_data['Description'].str.contains(query, case=False, na=False)
         filtered_data = tool_data[mask].copy()
     else:
@@ -160,14 +160,15 @@ with tab2:
             axis=1
         )
 
-    # ✅ Display tool dictionary table
+    # ✅ Display table with same width as the search box
     dict_display = filtered_data[['PDCA Category', 'Tool Name', 'Description']].copy()
     dict_display.rename(columns={'PDCA Category': 'Phase'}, inplace=True)
 
     if dict_display.empty:
-        st.write("No tools found. Try a different search term.")
+        st.warning("⚠️ No tools found. Try a different search term.")
     else:
-        st.markdown(dict_display.to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.container()  # Wrap table inside a container
+        st.dataframe(dict_display, use_container_width=True)
 
 # === Video Library Tab ===
 with tab3:
