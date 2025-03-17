@@ -4,6 +4,8 @@ import io
 import xlsxwriter
 from datetime import date
 import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 # Set wide layout
 st.set_page_config(page_title="PDCA Toolshed", layout="wide")
@@ -291,33 +293,60 @@ if FPDF is not None:
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
     tab5 = st.tabs(["Analytics Dashboard"])[0]  # Add a new tab for Analytics
- # === Analytics Tab ===
+
+# === Analytics Tab ===
 with tab5:
     st.subheader("📊 PDCA Analytics Dashboard")
     st.write("Analyze tool usage trends and find high-impact tools based on past selections.")
-
     
-    # ✅ Count tool usage
+    # ✅ Count tool usage per phase
+    phase_usage = {"Plan": 0, "Do": 0, "Check": 0, "Act": 0}
     tool_usage = {}
+    tool_combinations = []
+    
     for phase, tools in st.session_state.selected_tools.items():
+        phase_usage[phase] += len(tools)
         for tool in tools:
             tool_usage[tool] = tool_usage.get(tool, 0) + 1
-
-    # ✅ Convert to DataFrame
+        
+        # ✅ Collect tool pairing data for heatmap
+        for i in range(len(tools)):
+            for j in range(i + 1, len(tools)):
+                tool_combinations.append((tools[i], tools[j]))
+    
+    # ✅ Convert tool usage to DataFrame
     tool_usage_df = pd.DataFrame(tool_usage.items(), columns=["Tool Name", "Usage Count"]).sort_values(by="Usage Count", ascending=False)
-
-    # ✅ Display tool usage
+    
+    # ✅ Display tool usage table
     st.markdown("### 📈 Most Used PDCA Tools")
-    st.dataframe(tool_usage_df, use_container_width=True)  # ✅ Make it full width
-
-    # ✅ Plot a Bar Chart using Matplotlib
-    if not tool_usage_df.empty:
-        fig, ax = plt.subplots(figsize=(8, 5))
-        ax.barh(tool_usage_df["Tool Name"], tool_usage_df["Usage Count"], color="skyblue")
-        ax.set_xlabel("Usage Count")
-        ax.set_ylabel("Tool Name")
-        ax.set_title("📊 Most Used PDCA Tools")
-        ax.invert_yaxis()  # ✅ Ensure the most used tool appears at the top
-        st.pyplot(fig)
+    st.dataframe(tool_usage_df, use_container_width=True)
+    
+    # ✅ Plot PDCA Phase Distribution (Pie Chart)
+    st.markdown("### 📌 PDCA Phase Distribution")
+    fig1, ax1 = plt.subplots()
+    ax1.pie(phase_usage.values(), labels=phase_usage.keys(), autopct='%1.1f%%', colors=["gold", "limegreen", "dodgerblue", "orangered"], startangle=90)
+    ax1.axis("equal")  # Equal aspect ratio ensures the pie chart is circular.
+    st.pyplot(fig1)
+    
+    # ✅ Plot Most Used PDCA Tools (Bar Chart)
+    st.markdown("### 📊 Most Used PDCA Tools")
+    fig2, ax2 = plt.subplots(figsize=(8, 5))
+    ax2.barh(tool_usage_df["Tool Name"], tool_usage_df["Usage Count"], color="skyblue")
+    ax2.set_xlabel("Usage Count")
+    ax2.set_ylabel("Tool Name")
+    ax2.set_title("📊 Most Used PDCA Tools")
+    st.pyplot(fig2)
+    
+    # ✅ Generate Tool Pairing Heatmap
+    if tool_combinations:
+        st.markdown("### 🔥 Tool Pairing Trends (Heatmap)")
+        pairing_df = pd.DataFrame(tool_combinations, columns=["Tool 1", "Tool 2"])
+        heatmap_data = pairing_df.pivot_table(index="Tool 1", columns="Tool 2", aggfunc=len, fill_value=0)
+        
+        fig3, ax3 = plt.subplots(figsize=(10, 8))
+        sns.heatmap(heatmap_data, annot=True, cmap="Blues", linewidths=0.5, fmt="d")
+        plt.xticks(rotation=45, ha="right")
+        plt.yticks(rotation=0)
+        st.pyplot(fig3)
     else:
-        st.warning("No tools have been selected yet. Choose some tools in the sidebar to see analytics.")
+        st.warning("Not enough data to generate a heatmap. Select more tools!")
