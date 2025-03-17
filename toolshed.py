@@ -78,73 +78,64 @@ pdca_colors = {
 # ✅ Main Tabs
 st.title("🧰 One Team Continuous Improvement Toolshed")
 tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
+
 # === Toolshed Tab ===
 with tab1:
     st.subheader("Toolshed")
     st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
 
-   # ✅ Ensure session state is initialized before reading
-if "selected_tools" not in st.session_state:
-    st.session_state.selected_tools = {
-        "Plan": [],
-        "Do": [],
-        "Check": [],
-        "Act": []
-    }
+    # ✅ Retrieve selected tools from session state
+    selected_tools = st.session_state.selected_tools
 
-# ✅ Retrieve selected tools from session state
-selected_tools = st.session_state.selected_tools  
+    # ✅ Create PDCA toolboxes with colors
+    toolbox_cols = st.columns(4)
+    for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
+        with toolbox_cols[idx]:
+            tools = selected_tools[phase]
+            box_color = pdca_colors[phase]  
 
-# ✅ Create PDCA toolboxes with colors
-toolbox_cols = st.columns(4)  # Ensure correct indentation
-
-for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-    with toolbox_cols[idx]:  # Ensure this line is indented correctly
-        tools = selected_tools[phase]
-        box_color = pdca_colors[phase]
-
-        # ✅ Render PDCA-colored Toolbox Header
-        st.markdown(f"""
-        <div style="
-            background-color: {box_color}; 
-            padding: 15px; 
-            border-radius: 10px; 
-            text-align: center; 
-            color: white; 
-            font-weight: bold;">
-            {phase} Toolbox
-        </div>
-        """, unsafe_allow_html=True)
-
-        # ✅ Display selected tools
-        if not tools:
+            # ✅ Render PDCA-colored Toolbox Header
             st.markdown(f"""
             <div style="
-                background-color: #F1F1F1; 
-                padding: 10px; 
-                border-radius: 5px;
-                text-align: center;
-                margin-top: 5px;
-                color: black;">
-                No tools selected
+                background-color: {box_color}; 
+                padding: 15px; 
+                border-radius: 10px; 
+                text-align: center; 
+                color: white; 
+                font-weight: bold;">
+                {phase} Toolbox
             </div>
             """, unsafe_allow_html=True)
-        else:
-            toolbox_html = f"""
-            <div style="
-                background-color: white;
-                border: 2px solid {box_color};
-                border-radius: 10px;
-                padding: 10px;
-                margin-top: 5px;
-            ">
-            <ul style="list-style-type: none; padding: 0;">
-            """
-            for tool in tools:
-                toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
-            toolbox_html += "</ul></div>"
 
-            st.markdown(toolbox_html, unsafe_allow_html=True)
+            # ✅ Display selected tools
+            if not tools:
+                st.markdown(f"""
+                <div style="
+                    background-color: #F1F1F1; 
+                    padding: 10px; 
+                    border-radius: 5px;
+                    text-align: center;
+                    margin-top: 5px;
+                    color: black;">
+                    No tools selected
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                toolbox_html = f"""
+                <div style="
+                    background-color: white;
+                    border: 2px solid {box_color};
+                    border-radius: 10px;
+                    padding: 10px;
+                    margin-top: 5px;
+                ">
+                <ul style="list-style-type: none; padding: 0;">
+                """
+                for tool in tools:
+                    toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
+                toolbox_html += "</ul></div>"
+
+                st.markdown(toolbox_html, unsafe_allow_html=True)
 
 # === Tool Dictionary Tab ===
 with tab2:
@@ -220,30 +211,49 @@ with tab4:
     text_data = project_plan_df.to_csv(index=False, sep='\t')
     dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
 
-    # ✅ PDF Download (Re-Added)
-    try:
-        from fpdf import FPDF
-    except ImportError:
-        FPDF = None
 
+   # ✅ PDF Download (Fix Blank PDF Issue)
     if FPDF:
         pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)  # Auto page breaks
         pdf.add_page()
+        
+        # ✅ Title Section
         pdf.set_font("Arial", 'B', 16)
         pdf.cell(0, 10, f"Project Plan - {project_name if project_name else 'Untitled'}", ln=1, align='C')
+        
         pdf.set_font("Arial", '', 12)
         pdf.cell(0, 10, f"Owner: {project_owner if project_owner else 'N/A'}    Created: {created_date}", ln=1, align='C')
         pdf.ln(10)
 
-        for _, row in project_plan_df.iterrows():
-            pdf.set_font("Arial", 'B', 14)
-            pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
-            pdf.set_font("Arial", '', 12)
-            pdf.cell(0, 6, f"{row['Task Name']} - {row['Description']}", ln=1)
-            pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
-            pdf.ln(4)
+        # ✅ Check if there are tasks, else display a message
+        if project_plan_df.empty:
+            pdf.set_font("Arial", 'I', 12)
+            pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
+        else:
+            # ✅ Iterate over tasks and add them to the PDF
+            for _, row in project_plan_df.iterrows():
+                pdf.set_font("Arial", 'B', 14)
+                pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
+                pdf.set_font("Arial", '', 12)
 
-        pdf_bytes = pdf.output(dest='S').encode('utf-8')
+                # ✅ Handle Encoding Issues
+                task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
+                description = row['Description'] if row['Description'] else "No Description Available"
+
+                try:
+                    task_name = task_name.encode('latin-1', 'ignore').decode('latin-1')
+                    description = description.encode('latin-1', 'ignore').decode('latin-1')
+                except:
+                    task_name, description = "Encoding Error", "Encoding Error"
+
+                pdf.cell(0, 6, f"🔹 {task_name} - {description}", ln=1)
+                pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
+                pdf.ln(4)
+
+        # ✅ Generate and Allow PDF Download
+        pdf_bytes = pdf.output(dest='S').encode('latin-1')
         dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
+
     else:
         dcol4.write("PDF export not available")
