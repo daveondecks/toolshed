@@ -220,6 +220,19 @@ with tab4:
     # ✅ Display project plan table
     st.dataframe(project_plan_df, use_container_width=True)
 
+  
+
+    # ✅ Generate Excel File
+    excel_output = io.BytesIO()
+    with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
+        project_plan_df.to_excel(writer, sheet_name="Project Plan", index=False)
+
+    # ✅ Retrieve Excel Data for Download
+    excel_data = excel_output.getvalue()
+
+    # ✅ Add Excel Download Button
+    dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
     # ✅ Download buttons
     st.markdown("**Download Project Plan:**")
     dcol1, dcol2, dcol3, dcol4 = st.columns(4)
@@ -227,6 +240,21 @@ with tab4:
     # ✅ CSV Download
     csv_data = project_plan_df.to_csv(index=False, encoding='utf-8-sig')
     dcol1.download_button("Download CSV", data=csv_data, file_name="Project_Plan.csv", mime="text/csv")
+
+    # ✅ Excel Download (NEW)
+    import io
+    import xlsxwriter
+
+    # ✅ Generate Excel File
+    excel_output = io.BytesIO()
+    with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
+        project_plan_df.to_excel(writer, sheet_name="Project Plan", index=False)
+
+    # ✅ Retrieve Excel Data for Download
+    excel_data = excel_output.getvalue()
+
+    # ✅ Add Excel Download Button
+    dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
     # ✅ TXT Download
     text_data = project_plan_df.to_csv(index=False, sep='\t')
