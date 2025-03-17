@@ -143,36 +143,56 @@ with tab1:
 
 # === Tool Dictionary Tab ===
 with tab2:
-    st.subheader("Tool Dictionary")
-    
-    # Search box
+    st.subheader("📖 Tool Dictionary")
+    st.write("Browse and search for tools. Click on a tool name to learn more (if available).")
+
+    # ✅ Apply custom CSS for full-width table
+    st.markdown("""
+        <style>
+            .dataframe {
+                width: 100% !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse;
+            }
+            th, td {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            tr:nth-child(even) {background-color: #f2f2f2;}
+        </style>
+    """, unsafe_allow_html=True)
+
+    # ✅ Search box for filtering tools
     query = st.text_input("🔍 Search tools:", "")
 
-    # ✅ Case-insensitive filtering
+    # ✅ Filter tools based on search query
     if query:
-        mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | tool_data['Description'].str.contains(query, case=False, na=False)
+        mask = tool_data['Tool Name'].str.contains(query, case=False, na=False) | \
+               tool_data['Description'].str.contains(query, case=False, na=False)
         filtered_data = tool_data[mask].copy()
     else:
         filtered_data = tool_data.copy()
 
-    # ✅ Convert 'Tool Name' into clickable links
+    # ✅ Convert 'Tool Name' into clickable links ONLY IF 'More Info' URL is available
     if 'More Info' in filtered_data.columns:
         filtered_data['Tool Name'] = filtered_data.apply(
-            lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>" 
-                        if pd.notna(row['More Info']) and str(row['More Info']).strip() != "" 
-                        else row['Tool Name'],
+            lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>"
+            if pd.notna(row['More Info']) and str(row['More Info']).strip() else row['Tool Name'],
             axis=1
         )
 
-    # ✅ Display table with same width as the search box
+    # ✅ Select columns to display
     dict_display = filtered_data[['PDCA Category', 'Tool Name', 'Description']].copy()
     dict_display.rename(columns={'PDCA Category': 'Phase'}, inplace=True)
 
+    # ✅ Display table with clickable links only if URLs exist
     if dict_display.empty:
-        st.warning("⚠️ No tools found. Try a different search term.")
+        st.warning("No tools found. Try a different search term.")
     else:
-        st.container()  # Wrap table inside a container
-        st.dataframe(dict_display, use_container_width=True)
+        st.markdown(dict_display.to_html(escape=False, index=False), unsafe_allow_html=True)
 
 # === Video Library Tab ===
 with tab3:
