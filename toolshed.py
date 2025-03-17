@@ -227,21 +227,20 @@ with tab4:
     # ✅ CSV Download
     csv_data = project_plan_df.to_csv(index=False, encoding='utf-8-sig')
     dcol1.download_button("Download CSV", data=csv_data, file_name="Project_Plan.csv", mime="text/csv")
+    # ✅ TXT Download
+    text_data = project_plan_df.to_csv(index=False, sep='\t')
+    dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
 
     # ✅ Excel Download using `xlsxwriter`
 try:
-        excel_output = io.BytesIO()
-        with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
-            project_plan_df.to_excel(writer, index=False, sheet_name="Project Plan")
+    excel_output = io.BytesIO()
+    with pd.ExcelWriter(excel_output, engine='xlsxwriter') as writer:
+        project_plan_df.to_excel(writer, index=False, sheet_name="Project Plan")
         excel_data = excel_output.getvalue()
-        dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    dcol2.download_button("Download Excel", data=excel_data, file_name="Project_Plan.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 except Exception as e:
         dcol2.write("⚠️ Excel export not available")
-
-
-    # ✅ TXT Download
-        text_data = project_plan_df.to_csv(index=False, sep='\t')
-        dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
+    
 try:
     from fpdf import FPDF
 except ImportError:
