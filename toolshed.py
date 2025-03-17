@@ -169,7 +169,27 @@ with tab2:
     else:
         st.markdown(dict_display.to_html(escape=False, index=False), unsafe_allow_html=True)
 
+# === Video Library Tab ===
+with tab3:
+    st.subheader("🎥 Video Library - Work in Progress 🚧")
+    
+    # Work in Progress message with an icon
+    st.markdown(
+        """
+        🚀 **Coming Soon!** This is where you will be able to **upload a short video of your project**.  
+        
+        🎯 **What to Include in Your Video:**
+        - 🎬 A brief **introduction to your project**  
+        - 🛠️ The **PDCA tools** you used  
+        - 📊 **How successful it was** and **what you learned**  
+        - 💡 **Tips for others** who may want to try similar tools  
 
+        🔍 You will also be able to **search videos by PDCA category and keyword**.  
+
+        🏗️ **Just watch this space!** 🎥
+        """,
+        unsafe_allow_html=True
+    )
     # === Project Plan Tab ===
 with tab4:
     st.subheader("Project Plan")
