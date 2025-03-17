@@ -68,14 +68,6 @@ pdca_colors = {
     "Act": "#FF4500"    # Red
 }
 
-# ✅ Ensure session state is initialized properly
-if "selected_tools" not in st.session_state:
-    st.session_state.selected_tools = {
-        "Plan": [],
-        "Do": [],
-        "Check": [],
-        "Act": []
-    }
 
 # ✅ PDCA Detailed Descriptions (Expander Menus)
 descriptions = {
