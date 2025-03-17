@@ -240,8 +240,8 @@ except Exception as e:
 
 
     # ✅ TXT Download
-    text_data = project_plan_df.to_csv(index=False, sep='\t')
-    dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
+        text_data = project_plan_df.to_csv(index=False, sep='\t')
+        dcol3.download_button("Download TXT", data=text_data, file_name="Project_Plan.txt", mime="text/plain")
 try:
     from fpdf import FPDF
 except ImportError:
