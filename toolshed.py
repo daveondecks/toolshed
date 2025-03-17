@@ -156,12 +156,12 @@ The **Act** phase determines whether the change should be **fully implemented, m
 - Ignoring sustainability—changes should be maintained long-term.
 - Assuming the process is "fixed"—PDCA should continue as an ongoing cycle.
 """
-    }    
+}    
     # Display four expanders side by side, one for each PDCA phase description
-    exp_cols = st.columns(4)
-    for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-        with exp_cols[i].expander(f"{phase}", expanded=False):
-            st.write(descriptions[phase])
+exp_cols = st.columns(4)
+for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
+    with exp_cols[i].expander(f"{phase}", expanded=False):
+        st.write(descriptions[phase])
     
     # Display four toolbox containers (one per PDCA phase) with curved tops and slots for selected tools
     toolbox_cols = st.columns(4)
