@@ -10,7 +10,7 @@ st.set_page_config(page_title="PDCA Tool Shed", layout="wide")
 # Load tools data from CSV (cached for performance)
 @st.cache_data
 def load_tools_data():
-    return pd.read_csv("Tools_description.csv")
+    return pd.read_csv("Data/Tools_description.csv")
 
 tool_data = load_tools_data().dropna(subset=["Tool Name"])  # drop any rows without a tool name
 
