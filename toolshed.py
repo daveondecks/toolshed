@@ -17,7 +17,7 @@ def load_data():
     try:
         return pd.read_csv("Data/Tools_description.csv")
     except FileNotFoundError:
-        return pd.read_csv("Tools_description.csv")
+        return pd.read_csv("Data/Tools_description.csv")
 
 tool_data = load_data()
 
@@ -143,29 +143,10 @@ with tab1:
 
 # === Tool Dictionary Tab ===
 with tab2:
-    st.subheader("📖 Tool Dictionary")
-    st.write("Browse and search for tools. Click on a tool name to learn more (if available).")
+    st.subheader("📚 Tool Dictionary")
+    st.write("Browse tools and click on a tool name to learn more.")
 
-    # ✅ Apply custom CSS for full-width table
-    st.markdown("""
-        <style>
-            .dataframe {
-                width: 100% !important;
-            }
-            table {
-                width: 100% !important;
-                border-collapse: collapse;
-            }
-            th, td {
-                padding: 8px;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
-            }
-            tr:nth-child(even) {background-color: #f2f2f2;}
-        </style>
-    """, unsafe_allow_html=True)
-
-    # ✅ Search box for filtering tools
+    # ✅ Search Box
     query = st.text_input("🔍 Search tools:", "")
 
     # ✅ Filter tools based on search query
@@ -176,23 +157,44 @@ with tab2:
     else:
         filtered_data = tool_data.copy()
 
-    # ✅ Convert 'Tool Name' into clickable links ONLY IF 'More Info' URL is available
+    # ✅ Convert 'Tool Name' to clickable link if 'More Info' is available
     if 'More Info' in filtered_data.columns:
         filtered_data['Tool Name'] = filtered_data.apply(
             lambda row: f"<a href='{row['More Info']}' target='_blank'>{row['Tool Name']}</a>"
-            if pd.notna(row['More Info']) and str(row['More Info']).strip() else row['Tool Name'],
-            axis=1
+            if pd.notna(row['More Info']) and row['More Info'].startswith("http") else row['Tool Name'], axis=1
         )
 
-    # ✅ Select columns to display
+    # ✅ Select and rename columns for display
     dict_display = filtered_data[['PDCA Category', 'Tool Name', 'Description']].copy()
     dict_display.rename(columns={'PDCA Category': 'Phase'}, inplace=True)
 
-    # ✅ Display table with clickable links only if URLs exist
+    # ✅ Apply Custom CSS for Centered Headers
+    table_html = dict_display.to_html(escape=False, index=False)
+    styled_html = f"""
+    <style>
+        table {{
+            width: 100%;  /* Full width */
+            border-collapse: collapse;
+        }}
+        th {{
+            background-color: #f4f4f4;
+            text-align: center;  /* Center Headers */
+            padding: 10px;
+        }}
+        td {{
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }}
+    </style>
+    {table_html}
+    """
+
+    # ✅ Display the styled table
     if dict_display.empty:
         st.warning("No tools found. Try a different search term.")
     else:
-        st.markdown(dict_display.to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.markdown(styled_html, unsafe_allow_html=True)
+
 
 # === Video Library Tab ===
 with tab3:
