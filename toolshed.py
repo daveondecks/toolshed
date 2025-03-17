@@ -165,8 +165,6 @@ for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
     
 import streamlit as st
 
-import streamlit as st
-
 # Define PDCA colors for toolboxes
 pdca_colors = {
     "Plan": "#FFD700",  # Gold
@@ -184,19 +182,26 @@ if "selected_tools" not in st.session_state:
         "Act": []
     }
 
-# ✅ Sidebar for selecting tools (using a temporary variable to avoid direct state modification)
+# ✅ Sidebar for selecting tools (using a temporary variable)
 st.sidebar.header("Select Tools for PDCA Phases")
+
+selection_changed = False  # Flag to track if selection was updated
+
 for phase in ["Plan", "Do", "Check", "Act"]:
     selected_temp = st.sidebar.multiselect(
         f"{phase} Tools:",
-        options=["Five Ys", "MoSCoW", "Six S’s", "Tool A", "Tool B", "Tool C", "Tool D", "Tool E"],
-        default=st.session_state.selected_tools[phase]  # Keeps previous selections
+        options=["Five Ys", "MoSCoW", "Six S’s", "VSM", "Tool A", "Tool B", "Tool C", "Tool D", "Tool E"],
+        default=st.session_state.selected_tools.get(phase, [])
     )
-    
-    # ✅ Only update session state if selection changes (prevents unnecessary reruns)
+
+    # ✅ Only update session state if selection changes
     if selected_temp != st.session_state.selected_tools[phase]:
         st.session_state.selected_tools[phase] = selected_temp
-        st.rerun()  # Force Streamlit to refresh UI immediately
+        selection_changed = True  # Mark that a change occurred
+
+# ✅ Force UI refresh if a selection changed
+if selection_changed:
+    st.rerun()
 
 # ✅ Display the PDCA toolboxes in the main frame
 st.markdown("### Toolshed")
@@ -223,7 +228,7 @@ for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
         </div>
         """, unsafe_allow_html=True)
 
-        # ✅ Display tools (or "No tools selected" message)
+        # ✅ Display selected tools or "No tools selected"
         if not tools:
             st.markdown(f"""
             <div style="
