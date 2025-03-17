@@ -11,13 +11,45 @@ import numpy as np
 # Set wide layout
 st.set_page_config(page_title="PDCA Toolshed", layout="wide")
 
-# ✅ Load tool data
-@st.cache_data
+# ✅ Function to Update Tool Usage
+def update_tool_usage(selected_tools):
+    global tool_data  # Ensure we're modifying the loaded DataFrame
+
+    for tool in selected_tools:
+        # ✅ Find the row matching the tool
+        mask = tool_data["Tool Name"] == tool
+        if mask.any():
+            # ✅ Increment usage count
+            tool_data.loc[mask, "Usage Count"] += 1  
+            
+            # ✅ Update last used date
+            tool_data.loc[mask, "Last Used"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  
+
+            # ✅ Increment project count
+            tool_data.loc[mask, "Project Count"] += 1  
+
+    # ✅ Save updated data back to CSV
+    tool_data.to_csv(DATA_PATH, index=False)
+
+    # ✅ Load tool data with usage tracking
+DATA_PATH = "Data/Tools_description.csv"
+
 def load_data():
-    try:
-        return pd.read_csv("Data/Tools_description.csv")
-    except FileNotFoundError:
-        return pd.read_csv("Data/Tools_description.csv")
+    if os.path.exists(DATA_PATH):
+        df = pd.read_csv(DATA_PATH)
+        
+    # ✅ Ensure new columns exist (if missing, create them)
+        if "Usage Count" not in df.columns:
+            df["Usage Count"] = 0
+        if "Last Used" not in df.columns:
+            df["Last Used"] = ""
+        if "Project Count" not in df.columns:
+            df["Project Count"] = 0
+            
+        return df
+    else:
+        st.error("⚠️ Tools_description.csv not found!")
+        return pd.DataFrame()  # Return empty DataFrame if file is missing
 
 tool_data = load_data()
 
@@ -203,6 +235,16 @@ with tab4:
     project_name = st.session_state["project_name"]
     project_owner = st.session_state["project_owner"]
     created_date = st.session_state.get("created_date", date.today().strftime("%d-%m-%Y"))
+
+    # ✅ Get selected tools from session state
+    selected_tools = []
+    for phase in ["Plan", "Do", "Check", "Act"]:
+    selected_tools.extend(st.session_state.selected_tools[phase])
+
+# ✅ Update tool usage when a project is created
+if selected_tools:
+    update_tool_usage(selected_tools)
+
 
     # ✅ Display Project Details
     st.markdown(f"**Project Name:** {project_name} &nbsp;&nbsp; **Owner:** {project_owner} &nbsp;&nbsp; **Created:** {created_date}", unsafe_allow_html=True)
