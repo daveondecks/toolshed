@@ -92,27 +92,28 @@ if "selected_tools" not in st.session_state:
         "Act": []
     }
 
+# ✅ Retrieve selected tools from session state
 selected_tools = st.session_state.selected_tools  # Now correctly assigned
 
-    # ✅ Create PDCA toolboxes with colors
-    toolbox_cols = st.columns(4)
-    for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
-        with toolbox_cols[idx]:
-            tools = selected_tools[phase]
-            box_color = pdca_colors[phase]  
+# ✅ Create PDCA toolboxes with colors
+toolbox_cols = st.columns(4)  # Ensure correct indentation
+for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
+    with toolbox_cols[idx]:  # This line should be indented correctly
+        tools = selected_tools[phase]
+        box_color = pdca_colors[phase]
 
-            # ✅ Render PDCA-colored Toolbox Header
-            st.markdown(f"""
-            <div style="
-                background-color: {box_color}; 
-                padding: 15px; 
-                border-radius: 10px; 
-                text-align: center; 
-                color: white; 
-                font-weight: bold;">
-                {phase} Toolbox
-            </div>
-            """, unsafe_allow_html=True)
+        # ✅ Render PDCA-colored Toolbox Header
+        st.markdown(f"""
+        <div style="
+            background-color: {box_color}; 
+            padding: 15px; 
+            border-radius: 10px; 
+            text-align: center; 
+            color: white; 
+            font-weight: bold;">
+            {phase} Toolbox
+        </div>
+        """, unsafe_allow_html=True)
 
             # ✅ Display selected tools
             if not tools:
