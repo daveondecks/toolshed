@@ -56,14 +56,45 @@ st.title("🧰 One Team Continuous Improvement Toolshed")
 # Create top-level tabs
 tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
 
-# === Toolshed Tab ===
-with tab1:
-    st.subheader("Toolshed")
-    st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
-    
-   # PDCA step descriptions (to show in expanders above each toolbox column)
+import streamlit as st
+
+# Define PDCA colors for toolboxes
+pdca_colors = {
+    "Plan": "#FFD700",  # Gold
+    "Do": "#32CD32",    # Lime Green
+    "Check": "#1E90FF", # Dodger Blue
+    "Act": "#FF4500"    # Orange Red
+}
+
+# ✅ Ensure session state is initialized properly
+if "selected_tools" not in st.session_state:
+    st.session_state.selected_tools = {
+        "Plan": [],
+        "Do": [],
+        "Check": [],
+        "Act": []
+    }
+
+# ✅ Sidebar for selecting tools
+st.sidebar.header("Select Tools for PDCA Phases")
+for phase in ["Plan", "Do", "Check", "Act"]:
+    selected_temp = st.sidebar.multiselect(
+        f"{phase} Tools:",
+        options=["Five Ys", "MoSCoW", "Six S’s", "VSM", "Pareto Chart", "Kaizen", "Heat Map", "Check sheet", "Quality", "Comms", "Lessons"],
+        default=st.session_state.selected_tools.get(phase, [])  # Ensure safe retrieval
+    )
+
+    # ✅ Only update session state if selection changes
+    if selected_temp != st.session_state.selected_tools[phase]:
+        st.session_state.selected_tools[phase] = selected_temp
+
+# ✅ Main Toolshed Section
+st.subheader("Toolshed")
+st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
+
+# ✅ PDCA Detailed Descriptions (Expander Menus)
 descriptions = {
-    "Plan":  """📌 **Description:**
+    "Plan": """📌 **Description:**  
 The **Plan** phase is about **identifying a problem, understanding the root cause, and developing a solution.** 
 This is where you analyze the current state, set objectives, and plan improvements.
 
@@ -88,7 +119,7 @@ This is where you analyze the current state, set objectives, and plan improvemen
 - Overcomplicating the plan with too much documentation instead of actionable steps.
 """,
 
-    "Do": """📌 **Description:**
+    "Do": """📌 **Description:**  
 The **Do** phase involves **implementing the plan on a small scale** (pilot test) while monitoring progress.
 
 🛠 **Typical Tools:**
@@ -111,7 +142,7 @@ The **Do** phase involves **implementing the plan on a small scale** (pilot test
 - Ignoring feedback from frontline workers.
 """,
 
-    "Check": """📌 **Description:**
+    "Check": """📌 **Description:**  
 The **Check** phase focuses on **analyzing the results** of the pilot test to determine effectiveness.
 
 🛠 **Typical Tools:**
@@ -134,7 +165,7 @@ The **Check** phase focuses on **analyzing the results** of the pilot test to de
 - Assuming no further improvements are needed if the results look good.
 """,
 
-    "Act": """📌 **Description:**
+    "Act": """📌 **Description:**  
 The **Act** phase determines whether the change should be **fully implemented, modified, or abandoned.**
 
 🛠 **Typical Tools:**
@@ -156,70 +187,22 @@ The **Act** phase determines whether the change should be **fully implemented, m
 - Ignoring sustainability—changes should be maintained long-term.
 - Assuming the process is "fixed"—PDCA should continue as an ongoing cycle.
 """
-}    
-    # Display four expanders side by side, one for each PDCA phase description
+}
+
+# ✅ Display PDCA Descriptions
 exp_cols = st.columns(4)
 for i, phase in enumerate(["Plan", "Do", "Check", "Act"]):
     with exp_cols[i].expander(f"{phase}", expanded=False):
-        st.write(descriptions[phase])
-    
-import streamlit as st
+        st.markdown(descriptions[phase])
 
-# Define PDCA colors for toolboxes
-pdca_colors = {
-    "Plan": "#FFD700",  # Gold
-    "Do": "#32CD32",    # Lime Green
-    "Check": "#1E90FF", # Dodger Blue
-    "Act": "#FF4500"    # Orange Red
-}
-
-# ✅ Ensure session state is initialized properly (only once)
-if "selected_tools" not in st.session_state:
-    st.session_state.selected_tools = {
-        "Plan": [],
-        "Do": [],
-        "Check": [],
-        "Act": []
-    }
-
-# ✅ Sidebar for selecting tools (ensuring no duplication)
-st.sidebar.header("Select Tools for PDCA Phases")
-
-selection_changed = False  # Flag to track if selection was updated
-
-for phase in ["Plan", "Do", "Check", "Act"]:
-    # Prevents sidebar duplication
-    if phase not in st.session_state.selected_tools:
-        st.session_state.selected_tools[phase] = []
-
-    selected_temp = st.sidebar.multiselect(
-        f"{phase} Tools:",
-        options=["Five Ys", "MoSCoW", "Six S’s", "VSM", "Pareto Chart", "Kaizen", "Heat Map", "Check sheet", "Quality", "Comms", "Lessons"],
-        default=st.session_state.selected_tools[phase]
-    )
-
-    # ✅ Only update session state if selection changes
-    if selected_temp != st.session_state.selected_tools[phase]:
-        st.session_state.selected_tools[phase] = selected_temp
-        selection_changed = True  # Mark that a change occurred
-
-# ✅ Force UI refresh if a selection changed
-if selection_changed:
-    st.rerun()
-
-# ✅ Display the PDCA toolboxes in the main frame
-st.markdown("### Toolshed")
-st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below:")
-
-# ✅ Create PDCA toolbox columns
+# ✅ Create Toolboxes for Selected Tools
 toolbox_cols = st.columns(4)
-
 for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
     with toolbox_cols[idx]:
-        tools = st.session_state.selected_tools[phase]
-        box_color = pdca_colors[phase]  # Get color for this phase
+        tools = st.session_state.selected_tools[phase]  # Fetch selected tools
+        box_color = pdca_colors[phase]  # Get phase color
 
-        # ✅ Render the PDCA-colored toolbox header
+        # ✅ Render PDCA-colored Toolbox Header
         st.markdown(f"""
         <div style="
             background-color: {box_color}; 
@@ -246,20 +229,21 @@ for idx, phase in enumerate(["Plan", "Do", "Check", "Act"]):
             </div>
             """, unsafe_allow_html=True)
         else:
+            toolbox_html = f"""
+            <div style="
+                background-color: white;
+                border: 2px solid {box_color};
+                border-radius: 10px;
+                padding: 10px;
+                margin-top: 5px;
+            ">
+            <ul style="list-style-type: none; padding: 0;">
+            """
             for tool in tools:
-                st.markdown(f"""
-                <div style="
-                    background-color: white; 
-                    padding: 10px; 
-                    border: 2px solid {box_color}; 
-                    border-radius: 5px;
-                    text-align: center;
-                    margin-top: 5px;
-                    color: black;">
-                    ✅ {tool}
-                </div>
-                """, unsafe_allow_html=True)
+                toolbox_html += f'<li style="padding: 5px; border-bottom: 1px solid {box_color};">✅ {tool}</li>'
+            toolbox_html += "</ul></div>"
 
+            st.markdown(toolbox_html, unsafe_allow_html=True)
 # === Tool Dictionary Tab ===
 with tab2:
     st.subheader("Tool Dictionary")
