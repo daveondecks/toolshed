@@ -246,65 +246,46 @@ try:
 except ImportError:
     FPDF = None
 
-if FPDF:
+if FPDF is not None:
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
 
-    # ✅ Define PDCA Colors
-    pdca_colors = {
-        "Plan": (255, 215, 0),  # Gold Yellow
-        "Do": (50, 205, 50),    # Green
-        "Check": (30, 144, 255), # Blue
-        "Act": (255, 69, 0)     # Red
-    }
-
     # ✅ Title Section
     pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, f"Project Plan - {project_name}", ln=1, align='C')
+    pdf.cell(0, 10, f"Project Plan - {st.session_state.get('project_name', 'Untitled')}", ln=1, align='C')
     pdf.set_font("Arial", '', 12)
-    pdf.cell(0, 10, f"Owner: {project_owner}    Created: {created_date}", ln=1, align='C')
+    pdf.cell(0, 10, f"Owner: {st.session_state.get('project_owner', 'N/A')}    Created: {st.session_state.get('created_date', 'N/A')}", ln=1, align='C')
     pdf.ln(10)
 
+    # ✅ Write tasks to PDF
     if not project_plan_df.empty:
         for _, row in project_plan_df.iterrows():
-            phase = row['PDCA Phase']
+            pdf.set_font("Arial", 'B', 14)
+            pdf.cell(0, 8, f"{row['PDCA Phase']} Phase", ln=1)
+            pdf.set_font("Arial", '', 12)
+
+            # ✅ Handle encoding issues
             task_name = row['Task Name'] if row['Task Name'] else "Unnamed Task"
             description = row['Description'] if row['Description'] else "No Description Available"
 
-            # ✅ Remove unsupported characters
             def clean_text(text):
                 return ''.join(c for c in text if ord(c) < 128)  # Keep only ASCII characters
 
             task_name = clean_text(task_name)
             description = clean_text(description)
 
-            # ✅ Set Background Color for Phase Headers
-            pdf.set_fill_color(*pdca_colors.get(phase, (200, 200, 200)))  # Default grey if phase not found
-            pdf.set_text_color(255, 255, 255)  # White text
-            pdf.set_font("Arial", 'B', 14)
-            pdf.cell(0, 10, f" {phase} Phase ", ln=1, fill=True)
-            
-            # ✅ Reset Text Color to Black
-            pdf.set_text_color(0, 0, 0)
-            pdf.set_font("Arial", '', 12)
-            pdf.multi_cell(0, 6, f"{task_name} - {description}")  # Using multi_cell() to wrap text
+            pdf.cell(0, 6, f"{task_name} - {description}", ln=1)
             pdf.cell(0, 6, "Start Date: ______    Completion Date: ______", ln=1)
             pdf.ln(4)
+
     else:
         pdf.set_font("Arial", 'I', 12)
         pdf.cell(0, 10, "No tasks selected for this project plan.", ln=1, align='C')
 
-    # ✅ Generate PDF in a Bytes Buffer
-    pdf_buffer = io.BytesIO()
-    pdf.output(pdf_buffer)  # Write the PDF to a buffer
-    pdf_bytes = pdf_buffer.getvalue()  # Retrieve the bytes from the buffer
-
-    # ✅ Debug Output: Check if PDF is Generated
-    print(f"Generated PDF Size: {len(pdf_bytes)} bytes")  # Should not be 0
-
-    # ✅ Allow PDF Download
+    # ✅ Generate PDF Download Button
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')
     dcol4.download_button("Download PDF", data=pdf_bytes, file_name="Project_Plan.pdf", mime="application/pdf")
 
 else:
-    dcol4.write("⚠️ PDF export not available")
+    dcol4.write("⚠️ PDF export not available (FPDF not installed)")
