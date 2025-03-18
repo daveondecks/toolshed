@@ -308,7 +308,7 @@ with tab6:
 
      # Work in Progress message with an icon
     st.markdown(
-        st.title("📂 CI Repository")
+        st.title("Repository")
     st.write("Upload and share useful CI files with other users.")
     st.warning("🚀 This feature is currently under development and will be available in future updates.")
         """       
