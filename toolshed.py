@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import io
@@ -290,64 +289,3 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
-
-import streamlit as st
-
-# Horizontal top navigation bar
-top_nav = st.radio("Navigation", 
-                   ["🛠 Toolshed", "📖 Tool Dictionary", "📹 Video Library", "📑 Project Plan", "📊 Analytics", "📂 Repository"], 
-                   horizontal=True)
-
-if top_nav == "🛠 Toolshed":
-    st.title("🛠 Toolshed")
-    st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below.")
-
-    # Existing PDCA Toolbox UI elements
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.button("🟡 Plan Toolbox")
-        st.write("No tools selected")
-    with col2:
-        st.button("🟢 Do Toolbox")
-        st.write("No tools selected")
-    with col3:
-        st.button("🔵 Check Toolbox")
-        st.write("No tools selected")
-    with col4:
-        st.button("🔴 Act Toolbox")
-        st.write("No tools selected")
-
-elif top_nav == "📖 Tool Dictionary":
-    st.title("📖 Tool Dictionary")
-    st.write("Find detailed information about different tools available in the toolshed.")
-
-elif top_nav == "📹 Video Library":
-    st.title("📹 Video Library")
-    st.write("Access instructional and project-related videos.")
-
-elif top_nav == "📑 Project Plan":
-    st.title("📑 Project Plan")
-    st.write("Manage your continuous improvement project plans here.")
-
-elif top_nav == "📊 Analytics":
-    st.title("📊 Tools Analytics")
-    st.write("Analyze tool usage trends and track persistent tool usage.")
-    st.info("🔍 Future updates will include AI-based recommendations for the best and most popular tools.")
-    
-    # Placeholder for analytics features
-    st.write("📈 **Upcoming Features:**")
-    st.write("- Tool usage trends over time")
-    st.write("- AI-based recommendations for best tools")
-    st.write("- Predictive maintenance insights")
-
-elif top_nav == "📂 Repository":
-    st.title("📂 CI Repository")
-    st.write("Upload and share useful CI files with other users.")
-    st.warning("🚀 This feature is currently under development and will be available in future updates.")
-    
-    # Placeholder for file upload section
-    st.file_uploader("Upload CI Files", type=["csv", "xlsx", "docx", "pdf"])
-    st.write("📁 **Upcoming Features:**")
-    st.write("- User-shared files repository")
-    st.write("- Categorization and tagging of files")
-    st.write("- Access control and permissions")
