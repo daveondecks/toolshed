@@ -77,7 +77,7 @@ pdca_colors = {
 
 # ✅ Main Tabs
 st.title("🧰 One Team Continuous Improvement Toolshed")
-tab1, tab2, tab3, tab4,tab5, tab6 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan","Analytics", "Repository"])
+tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
 
 # === Toolshed Tab ===
 with tab1:
@@ -289,29 +289,3 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
-    # === Analytics Tab ===
-with tab5:
-    st.subheader("Analytics")
-
-     # Work in Progress message with an icon
-    st.markdown(
-        """
-         🔍  **Coming Soon!** This is where the (persistent data 📊) will analyse tool usage and using ML and AI will suggest the most popilar and effective tools or suit of tool to use under each step of the PDCA cycle**.  
-        
-       
-        """,
-        unsafe_allow_html=True
-    )
-
-with tab6:
-
-     # Work in Progress message with an icon
-    st.markdown(
-        st.title("Repository")
-    st.write("Upload and share useful CI files with other users.")
-    st.warning("🚀 This feature is currently under development and will be available in future updates.")
-        """       
-       
-        """,
-        unsafe_allow_html=True
-    )
