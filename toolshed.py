@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import io
@@ -289,3 +290,49 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
+
+import streamlit as st
+
+# Horizontal top navigation bar with Analytics and Repository added
+top_nav = st.radio("Navigation", 
+                   ["🛠 Toolshed", "📖 Tool Dictionary", "📹 Video Library", "📑 Project Plan", "📊 Analytics", "📂 Repository"], 
+                   horizontal=True)
+
+if top_nav == "🛠 Toolshed":
+    st.title("🛠 Toolshed")
+    st.write("Manage and select tools for Continuous Improvement projects.")
+
+elif top_nav == "📖 Tool Dictionary":
+    st.title("📖 Tool Dictionary")
+    st.write("Find detailed information about tools in the system.")
+
+elif top_nav == "📹 Video Library":
+    st.title("📹 Video Library")
+    st.write("Access instructional and project-related videos.")
+
+elif top_nav == "📑 Project Plan":
+    st.title("📑 Project Plan")
+    st.write("Manage and track project planning details.")
+
+elif top_nav == "📊 Analytics":
+    st.title("📊 Tools Analytics")
+    st.write("Analyze tool usage trends and track persistent tool usage.")
+    st.info("🔍 Future updates will include AI-based recommendations for the best and most popular tools.")
+    
+    # Placeholder for analytics features
+    st.write("📈 **Upcoming Features:**")
+    st.write("- Tool usage trends over time")
+    st.write("- AI-based recommendations for best tools")
+    st.write("- Predictive maintenance insights")
+
+elif top_nav == "📂 Repository":
+    st.title("📂 CI Repository")
+    st.write("Upload and share useful CI files with other users.")
+    st.warning("🚀 This feature is currently under development and will be available in future updates.")
+    
+    # Placeholder for file upload section
+    st.file_uploader("Upload CI Files", type=["csv", "xlsx", "docx", "pdf"])
+    st.write("📁 **Upcoming Features:**")
+    st.write("- User-shared files repository")
+    st.write("- Categorization and tagging of files")
+    st.write("- Access control and permissions")
