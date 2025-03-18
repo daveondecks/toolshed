@@ -304,7 +304,7 @@ with tab5:
     )
 
 with tab6:
-    st.subheader("📂 Repository")
+    st.subheader("Repository")
 
      # Work in Progress message with an icon
     st.markdown(
