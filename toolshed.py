@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import io
@@ -289,3 +290,28 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
+
+import streamlit as st
+import pandas as pd
+
+# Sidebar Navigation
+st.sidebar.title("🔧 Toolshed Navigation")
+page = st.sidebar.radio("Go to", ["🏠 Home", "🛠 Tools", "📊 Analytics", "📂 Repository"])
+
+if page == "🏠 Home":
+    st.title("🏠 Toolshed Home")
+    st.write("Welcome to the Toolshed Management System! This app helps you manage tools, track their usage, and share useful CI files with others.")
+
+elif page == "🛠 Tools":
+    st.title("🛠 Tools List")
+    st.write("View and manage all tools available in the Toolshed.")
+
+elif page == "📊 Analytics":
+    st.title("📊 Tools Analytics")
+    st.write("Analyze tool usage trends and track persistent tool usage.")
+    st.info("🔍 Future updates will include AI-based recommendations for the best and most popular tools.")
+
+elif page == "📂 Repository":
+    st.title("📂 CI Repository")
+    st.write("Upload and share useful CI files with other users.")
+    st.warning("🚀 This feature is currently under development and will be available in future updates.")
