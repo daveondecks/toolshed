@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import io
@@ -78,7 +77,7 @@ pdca_colors = {
 
 # ✅ Main Tabs
 st.title("🧰 One Team Continuous Improvement Toolshed")
-tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
+tab1, tab2, tab3, tab4,tab5, tab6 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan","Analytics", "Repository"])
 
 # === Toolshed Tab ===
 with tab1:
@@ -290,49 +289,30 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
+    # === Analytics Tab ===
+with tab5:
+    st.subheader("Analytics")
 
-import streamlit as st
+     # Work in Progress message with an icon
+    st.markdown(
+        """
+         🔍  **Coming Soon!** This is where the (persistent data 📊) will analyse tool usage and using ML and AI will suggest the most popilar and effective tools or suit of tool to use under each step of the PDCA cycle**.  
+        
+       
+        """,
+        unsafe_allow_html=True
+    )
 
-# Horizontal top navigation bar with Analytics and Repository added
-top_nav = st.radio("Navigation", 
-                   ["🛠 Toolshed", "📖 Tool Dictionary", "📹 Video Library", "📑 Project Plan", "📊 Analytics", "📂 Repository"], 
-                   horizontal=True)
+with tab6:
+    st.subheader("📂 Repository")
 
-if top_nav == "🛠 Toolshed":
-    st.title("🛠 Toolshed")
-    st.write("Manage and select tools for Continuous Improvement projects.")
-
-elif top_nav == "📖 Tool Dictionary":
-    st.title("📖 Tool Dictionary")
-    st.write("Find detailed information about tools in the system.")
-
-elif top_nav == "📹 Video Library":
-    st.title("📹 Video Library")
-    st.write("Access instructional and project-related videos.")
-
-elif top_nav == "📑 Project Plan":
-    st.title("📑 Project Plan")
-    st.write("Manage and track project planning details.")
-
-elif top_nav == "📊 Analytics":
-    st.title("📊 Tools Analytics")
-    st.write("Analyze tool usage trends and track persistent tool usage.")
-    st.info("🔍 Future updates will include AI-based recommendations for the best and most popular tools.")
-    
-    # Placeholder for analytics features
-    st.write("📈 **Upcoming Features:**")
-    st.write("- Tool usage trends over time")
-    st.write("- AI-based recommendations for best tools")
-    st.write("- Predictive maintenance insights")
-
-elif top_nav == "📂 Repository":
-    st.title("📂 CI Repository")
+     # Work in Progress message with an icon
+    st.markdown(
+        st.title("📂 CI Repository")
     st.write("Upload and share useful CI files with other users.")
     st.warning("🚀 This feature is currently under development and will be available in future updates.")
-    
-    # Placeholder for file upload section
-    st.file_uploader("Upload CI Files", type=["csv", "xlsx", "docx", "pdf"])
-    st.write("📁 **Upcoming Features:**")
-    st.write("- User-shared files repository")
-    st.write("- Categorization and tagging of files")
-    st.write("- Access control and permissions")
+        """       
+       
+        """,
+        unsafe_allow_html=True
+    )
