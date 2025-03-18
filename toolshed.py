@@ -293,10 +293,12 @@ else:
 
 import streamlit as st
 
-# Top navigation tabs (aligned with existing ones)
-tabs = st.tabs(["🛠 Toolshed", "📖 Tool Dictionary", "📹 Video Library", "📑 Project Plan", "📊 Analytics", "📂 Repository"])
+# Horizontal top navigation bar
+top_nav = st.radio("Navigation", 
+                   ["🛠 Toolshed", "📖 Tool Dictionary", "📹 Video Library", "📑 Project Plan", "📊 Analytics", "📂 Repository"], 
+                   horizontal=True)
 
-with tabs[0]:  # Toolshed Tab
+if top_nav == "🛠 Toolshed":
     st.title("🛠 Toolshed")
     st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below.")
 
@@ -315,24 +317,37 @@ with tabs[0]:  # Toolshed Tab
         st.button("🔴 Act Toolbox")
         st.write("No tools selected")
 
-with tabs[1]:  # Tool Dictionary
+elif top_nav == "📖 Tool Dictionary":
     st.title("📖 Tool Dictionary")
     st.write("Find detailed information about different tools available in the toolshed.")
 
-with tabs[2]:  # Video Library
+elif top_nav == "📹 Video Library":
     st.title("📹 Video Library")
     st.write("Access instructional and project-related videos.")
 
-with tabs[3]:  # Project Plan
+elif top_nav == "📑 Project Plan":
     st.title("📑 Project Plan")
     st.write("Manage your continuous improvement project plans here.")
 
-with tabs[4]:  # Analytics Tab
+elif top_nav == "📊 Analytics":
     st.title("📊 Tools Analytics")
     st.write("Analyze tool usage trends and track persistent tool usage.")
     st.info("🔍 Future updates will include AI-based recommendations for the best and most popular tools.")
+    
+    # Placeholder for analytics features
+    st.write("📈 **Upcoming Features:**")
+    st.write("- Tool usage trends over time")
+    st.write("- AI-based recommendations for best tools")
+    st.write("- Predictive maintenance insights")
 
-with tabs[5]:  # Repository Tab
+elif top_nav == "📂 Repository":
     st.title("📂 CI Repository")
     st.write("Upload and share useful CI files with other users.")
     st.warning("🚀 This feature is currently under development and will be available in future updates.")
+    
+    # Placeholder for file upload section
+    st.file_uploader("Upload CI Files", type=["csv", "xlsx", "docx", "pdf"])
+    st.write("📁 **Upcoming Features:**")
+    st.write("- User-shared files repository")
+    st.write("- Categorization and tagging of files")
+    st.write("- Access control and permissions")
