@@ -294,24 +294,31 @@ else:
 import streamlit as st
 import pandas as pd
 
-# Sidebar Navigation
-st.sidebar.title("🔧 Toolshed Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "🛠 Tools", "📊 Analytics", "📂 Repository"])
+# Create top navigation tabs
+tabs = st.tabs(["🏠 Home", "🛠 Tools", "📊 Analytics", "📂 Repository", "📑 Project Report", "📹 Video Library"])
 
-if page == "🏠 Home":
+with tabs[0]:  # Home Tab
     st.title("🏠 Toolshed Home")
     st.write("Welcome to the Toolshed Management System! This app helps you manage tools, track their usage, and share useful CI files with others.")
 
-elif page == "🛠 Tools":
+with tabs[1]:  # Tools Tab
     st.title("🛠 Tools List")
     st.write("View and manage all tools available in the Toolshed.")
 
-elif page == "📊 Analytics":
+with tabs[2]:  # Analytics Tab
     st.title("📊 Tools Analytics")
     st.write("Analyze tool usage trends and track persistent tool usage.")
     st.info("🔍 Future updates will include AI-based recommendations for the best and most popular tools.")
 
-elif page == "📂 Repository":
+with tabs[3]:  # Repository Tab
     st.title("📂 CI Repository")
     st.write("Upload and share useful CI files with other users.")
     st.warning("🚀 This feature is currently under development and will be available in future updates.")
+
+with tabs[4]:  # Project Report Tab (Existing)
+    st.title("📑 Project Report")
+    st.write("Detailed reports on tool usage and project summaries.")
+
+with tabs[5]:  # Video Library Tab (Existing)
+    st.title("📹 Video Library")
+    st.write("Collection of instructional and project-related videos.")
