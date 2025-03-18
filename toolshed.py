@@ -292,33 +292,47 @@ else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
 
 import streamlit as st
-import pandas as pd
 
-# Create top navigation tabs
-tabs = st.tabs(["🏠 Home", "🛠 Tools", "📊 Analytics", "📂 Repository", "📑 Project Report", "📹 Video Library"])
+# Top navigation tabs (aligned with existing ones)
+tabs = st.tabs(["🛠 Toolshed", "📖 Tool Dictionary", "📹 Video Library", "📑 Project Plan", "📊 Analytics", "📂 Repository"])
 
-with tabs[0]:  # Home Tab
-    st.title("🏠 Toolshed Home")
-    st.write("Welcome to the Toolshed Management System! This app helps you manage tools, track their usage, and share useful CI files with others.")
+with tabs[0]:  # Toolshed Tab
+    st.title("🛠 Toolshed")
+    st.write("Select tools from each PDCA phase in the sidebar. They will appear in the corresponding toolbox below.")
 
-with tabs[1]:  # Tools Tab
-    st.title("🛠 Tools List")
-    st.write("View and manage all tools available in the Toolshed.")
+    # Existing PDCA Toolbox UI elements
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.button("🟡 Plan Toolbox")
+        st.write("No tools selected")
+    with col2:
+        st.button("🟢 Do Toolbox")
+        st.write("No tools selected")
+    with col3:
+        st.button("🔵 Check Toolbox")
+        st.write("No tools selected")
+    with col4:
+        st.button("🔴 Act Toolbox")
+        st.write("No tools selected")
 
-with tabs[2]:  # Analytics Tab
+with tabs[1]:  # Tool Dictionary
+    st.title("📖 Tool Dictionary")
+    st.write("Find detailed information about different tools available in the toolshed.")
+
+with tabs[2]:  # Video Library
+    st.title("📹 Video Library")
+    st.write("Access instructional and project-related videos.")
+
+with tabs[3]:  # Project Plan
+    st.title("📑 Project Plan")
+    st.write("Manage your continuous improvement project plans here.")
+
+with tabs[4]:  # Analytics Tab
     st.title("📊 Tools Analytics")
     st.write("Analyze tool usage trends and track persistent tool usage.")
     st.info("🔍 Future updates will include AI-based recommendations for the best and most popular tools.")
 
-with tabs[3]:  # Repository Tab
+with tabs[5]:  # Repository Tab
     st.title("📂 CI Repository")
     st.write("Upload and share useful CI files with other users.")
     st.warning("🚀 This feature is currently under development and will be available in future updates.")
-
-with tabs[4]:  # Project Report Tab (Existing)
-    st.title("📑 Project Report")
-    st.write("Detailed reports on tool usage and project summaries.")
-
-with tabs[5]:  # Video Library Tab (Existing)
-    st.title("📹 Video Library")
-    st.write("Collection of instructional and project-related videos.")
