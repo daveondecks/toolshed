@@ -293,24 +293,33 @@ else:
     import streamlit as st
 from PIL import Image
 
-# Tab 5: Repository
-st.title("📂 CI Repository (Coming Soon)")
-st.write("Upload and share useful CI files and presentations with other users.")
-st.info("This feature is a work in progress and will be available soon!")
+# === Repository ===
+with tab5:
+    # Tab 5: Repository
+    st.title("📂 CI Repository (Coming Soon)")
+    st.write("Upload and share useful CI files and presentations with other users.")
+    st.info("This feature is a work in progress and will be available soon!")
 
+# === Analytics ===
+with tab6:
 # Tab 6: Analytics
-st.title("📊 Analytics (Coming Soon)")
-st.write("Track tool usage, analyze effectiveness, and get recommendations based on ML models.")
-st.info("Future updates will include graphs and AI-driven recommendations!")
+    st.title("📊 Analytics (Coming Soon)")
+    st.write("Track tool usage, analyze effectiveness, and get recommendations based on ML models.")
+    st.info("Future updates will include graphs and AI-driven recommendations!")
 
+
+# === Discussion ===
+with tab7:
 # Tab 7: Discussions
-st.title("💬 CI Discussions")
-st.write("A searchable forum for discussing CI tools, sharing tips, successes, and learning from failures.")
-st.text_input("Search discussions...")
-st.info("Start a new discussion or browse existing conversations.")
+    st.title("💬 CI Discussions")
+    st.write("A searchable forum for discussing CI tools, sharing tips, successes, and learning from failures.")
+    st.text_input("Search discussions...")
+    st.info("Start a new discussion or browse existing conversations.")
 
+# === Feedback ===
+with tab8:
 # Tab 8: Feedback
-st.title("📝 Toolshed Feedback")
-st.write("Share your thoughts on the Toolshed app! What do you like? What can be improved?")
-st.text_area("Your feedback here...")
-st.button("Submit Feedback")
+    st.title("📝 Toolshed Feedback")
+    st.write("Share your thoughts on the Toolshed app! What do you like? What can be improved?")
+    st.text_area("Your feedback here...")
+    st.button("Submit Feedback")
