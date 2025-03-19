@@ -289,3 +289,28 @@ if FPDF is not None:
 
 else:
     dcol4.write("⚠️ PDF export not available (FPDF not installed)")
+
+    import streamlit as st
+from PIL import Image
+
+# Tab 5: Repository
+st.title("📂 CI Repository (Coming Soon)")
+st.write("Upload and share useful CI files and presentations with other users.")
+st.info("This feature is a work in progress and will be available soon!")
+
+# Tab 6: Analytics
+st.title("📊 Analytics (Coming Soon)")
+st.write("Track tool usage, analyze effectiveness, and get recommendations based on ML models.")
+st.info("Future updates will include graphs and AI-driven recommendations!")
+
+# Tab 7: Discussions
+st.title("💬 CI Discussions")
+st.write("A searchable forum for discussing CI tools, sharing tips, successes, and learning from failures.")
+st.text_input("Search discussions...")
+st.info("Start a new discussion or browse existing conversations.")
+
+# Tab 8: Feedback
+st.title("📝 Toolshed Feedback")
+st.write("Share your thoughts on the Toolshed app! What do you like? What can be improved?")
+st.text_area("Your feedback here...")
+st.button("Submit Feedback")
