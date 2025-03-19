@@ -77,7 +77,7 @@ pdca_colors = {
 
 # ✅ Main Tabs
 st.title("🧰 One Team Continuous Improvement Toolshed")
-tab1, tab2, tab3, tab4 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Toolshed", "Tool Dictionary", "Video Library", "Project Plan", "Respository", "Analytics"])
 
 # === Toolshed Tab ===
 with tab1:
